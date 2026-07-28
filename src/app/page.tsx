@@ -1,33 +1,38 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useState, useCallback } from "react";
+import { useLenis } from "@/components/scroll/useLenis";
 
-// R3F must be client-side only — dynamic import with ssr:false
-const SceneCanvas = dynamic(() => import("@/components/three/SceneCanvas"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="text-[var(--color-text-muted)] text-sm tracking-widest uppercase">
-        Loading...
-      </div>
-    </div>
-  ),
-});
+const VideoScrubber = dynamic(
+  () => import("@/components/scroll/VideoScrubber"),
+  { ssr: false }
+);
 
 export default function Home() {
+  useLenis();
+  const [progress, setProgress] = useState(0);
+
+  const handleProgress = useCallback((p: number) => {
+    setProgress(p);
+  }, []);
+
   return (
-    <main className="bg-[var(--color-background)]">
-      {/* Hero — full viewport canvas */}
-      <section className="w-full h-screen relative">
-        <div className="absolute inset-0">
-          <SceneCanvas />
-        </div>
-        {/* Overlay label — temp, to confirm render */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-          <p className="text-[var(--color-text-muted)] text-xs tracking-widest uppercase">
-            Drag to inspect · scroll wiring comes next
-          </p>
-        </div>
+    <main style={{ backgroundColor: "#d4cfc9" }}>
+      {/* Debug overlay — remove after Step 7 */}
+      <div className="fixed top-4 right-4 z-50 bg-black/20 text-[var(--color-text-primary)] font-mono text-xs px-3 py-2 rounded backdrop-blur-sm">
+        scroll: {(progress * 100).toFixed(1)}% &nbsp;|&nbsp; frame: {Math.round(progress * 240)}
+      </div>
+
+      <VideoScrubber onProgress={handleProgress} />
+
+      {/* Placeholder footer */}
+      <section className="h-screen flex items-center justify-center"
+        style={{ backgroundColor: "#d4cfc9" }}
+      >
+        <p className="text-[var(--color-text-muted)] text-sm tracking-widest uppercase">
+          Contact section — coming in Step 11
+        </p>
       </section>
     </main>
   );

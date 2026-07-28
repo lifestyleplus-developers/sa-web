@@ -1,25 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand colors */
-  --color-background: #0a0a0a;
-  --color-surface: #141414;
-  --color-surface-elevated: #1e1e1e;
-  --color-border: #2a2a2a;
+  --color-background: #d4cfc9;
+  --color-surface: #cbc6c0;
+  --color-surface-elevated: #e8e4e0;
+  --color-border: #b8b3ad;
 
-  --color-accent: #e8621a;        /* burnt orange — industrial */
+  --color-accent: #e8621a;
   --color-accent-dim: #c04e10;
   --color-accent-glow: rgba(232, 98, 26, 0.15);
 
-  --color-text-primary: #f0ece4;
-  --color-text-secondary: #a09888;
-  --color-text-muted: #5a5248;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4540;
+  --color-text-muted: #8a8480;
 
-  /* Typography */
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Inter', system-ui, sans-serif;
-
-  /* Spacing / layout */
   --container-max: 1200px;
 }
 
@@ -30,18 +25,17 @@
 }
 
 html {
-  background-color: #0a0a0a;
-  color: #f0ece4;
+  background-color: #d4cfc9;
+  color: #1a1a1a;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  scroll-behavior: auto; /* lenis handles smooth scroll */
+  scroll-behavior: auto;
 }
 
 body {
-  background-color: #0a0a0a;
+  background-color: #d4cfc9;
   overflow-x: hidden;
 }
 
-/* Utility: hide scrollbar visually but keep scroll */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
