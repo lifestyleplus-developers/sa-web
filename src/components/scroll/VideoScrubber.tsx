@@ -77,11 +77,10 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     if (!loaded) return;
 
     function animate() {
-      // Ease current frame toward target
-      const diff = targetFrameRef.current - currentFrameRef.current;
-      if (Math.abs(diff) > 0.1) {
-        currentFrameRef.current += diff * 0.12;
-        drawFrame(Math.round(currentFrameRef.current));
+      // Lenis handles the easing natively, so we just snap to the target frame
+      if (currentFrameRef.current !== targetFrameRef.current) {
+        currentFrameRef.current = targetFrameRef.current;
+        drawFrame(currentFrameRef.current);
       }
       rafRef.current = requestAnimationFrame(animate);
     }

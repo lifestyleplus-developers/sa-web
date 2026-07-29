@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
+import SmoothScrolling from "@/components/SmoothScrolling";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -82,7 +83,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body>
         <JsonLd />
-        {children}
+        <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>
   );
