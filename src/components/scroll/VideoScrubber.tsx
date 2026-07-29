@@ -64,7 +64,12 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Cover-fit the image on the canvas
-    const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+    let scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+    
+    // Fit to width on mobile devices to prevent horizontal cropping
+    if (window.innerWidth < 768) {
+      scale = canvas.width / img.naturalWidth;
+    }
     const x = (canvas.width - img.naturalWidth * scale) / 2;
     const y = (canvas.height - img.naturalHeight * scale) / 2;
     ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
