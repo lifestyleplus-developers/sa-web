@@ -25,6 +25,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
+  const lastDrawnFrameRef = useRef(-1);
   const rafRef = useRef<number>(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -72,17 +73,36 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
   }
 
-  // Smooth easing RAF loop
+  // Smooth easing RAF loop with 60 FPS throttle
   useEffect(() => {
     if (!loaded) return;
 
-    function animate() {
-      // Lenis handles the easing natively, so we just snap to the target frame
-      if (currentFrameRef.current !== targetFrameRef.current) {
-        currentFrameRef.current = targetFrameRef.current;
-        drawFrame(currentFrameRef.current);
-      }
+    let lastTime = 0;
+    const fps = 60;
+    const interval = 1000 / fps;
+
+    function animate(time: number) {
       rafRef.current = requestAnimationFrame(animate);
+
+      if (!lastTime) {
+        lastTime = time;
+      }
+
+      const deltaTime = time - lastTime;
+      if (deltaTime < interval) return;
+
+      // Adjust lastTime to maintain consistent 60fps cadence
+      lastTime = time - (deltaTime % interval);
+
+      // Lerp for smoother animation on phones (where Lenis might be disabled)
+      currentFrameRef.current += (targetFrameRef.current - currentFrameRef.current) * 0.15;
+
+      const frameToDraw = Math.round(currentFrameRef.current);
+      
+      if (frameToDraw !== lastDrawnFrameRef.current) {
+        drawFrame(frameToDraw);
+        lastDrawnFrameRef.current = frameToDraw;
+      }
     }
 
     rafRef.current = requestAnimationFrame(animate);
