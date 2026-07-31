@@ -23,63 +23,63 @@ const services = [
     title: "Office Dismantling",
     description: "Complete corporate office dismantling, workstations, partitions, and site cleanup.",
     badge: "Priority Service",
-    icon: Building2,
+    image: "/services/office_dismantling.png",
     variant: "warning" as const,
   },
   {
     title: "Commercial Scrap",
     description: "Bulk buying of industrial and commercial scrap materials at the best market rates.",
     badge: "Bulk Buy",
-    icon: Factory,
+    image: "/services/commercial_scrap.png",
     variant: "success" as const,
   },
   {
     title: "IT Equipment",
     description: "Laptops, servers, networking gear, and e-waste buyback and recycling.",
     badge: "High Value",
-    icon: Monitor,
+    image: "/services/it_equipment.png",
     variant: "success" as const,
   },
   {
     title: "UPS & Batteries",
     description: "Safe disposal and buyback of commercial UPS systems and old battery banks.",
     badge: "Recycling",
-    icon: BatteryCharging,
+    image: "/services/warehouse_clearance.png",
     variant: "success" as const,
   },
   {
     title: "Hotel Equipment",
     description: "Commercial kitchen equipment, restaurant furniture, and appliance clearance.",
     badge: "Specialized",
-    icon: ChefHat,
+    image: "/services/furniture_liquidation.png",
     variant: "success" as const,
   },
   {
     title: "AC Scrap Buyers",
     description: "Central ACs, split units, HVAC systems, and chilling plant dismantling.",
     badge: "Fast Clearance",
-    icon: Snowflake,
+    image: "/services/hvac_system.png",
     variant: "success" as const,
   },
   {
     title: "Lift Dismantling",
     description: "Old passenger and freight lifts, lift cabins, motors, and heavy steel parts.",
     badge: "Heavy Duty",
-    icon: ArrowUpDown,
+    image: "/services/metal_recycling.png",
     variant: "warning" as const,
   },
   {
     title: "Electrical Panels",
     description: "LT/HT panels, control boards, distribution panels, and heavy copper/aluminum wiring.",
     badge: "Industrial",
-    icon: Zap,
+    image: "/services/electrical_scrap.png",
     variant: "success" as const,
   },
   {
     title: "Heavy Equipment",
     description: "Excavators, damaged machinery, generators, and heavy industrial equipment scrap.",
     badge: "Machinery",
-    icon: Tractor,
+    image: "/services/industrial_machinery.png",
     variant: "warning" as const,
   },
 ];
@@ -125,19 +125,19 @@ export default function Services() {
   return (
     <section 
       ref={containerRef}
-      className="relative z-10 bg-background min-h-screen py-24 md:py-32 px-4 md:px-12 overflow-hidden"
+      className="relative z-10 bg-white h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 md:px-12"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-16 md:mb-24 flex flex-col items-center text-center gap-4">
-          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase">
-            Services <span className="text-[#a5fe00]">Provided</span>
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center h-full">
+        <div className="mb-8 md:mb-12 flex flex-col items-center text-center gap-2">
+          <h2 className="text-4xl md:text-5xl font-black text-black tracking-tighter uppercase">
+            Services <span className="text-red-600">Provided</span>
           </h2>
-          <p className="text-white/60 text-lg md:text-xl max-w-2xl">
+          <p className="text-black/60 text-base md:text-lg max-w-2xl">
             We buy used equipment and scrap. We do not sell. Discover our comprehensive range of commercial dismantling and buyback services.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-h-[70vh] overflow-visible">
           {services.map((service, index) => (
             <div key={index} className="service-card w-full">
               <TiltCard
@@ -145,13 +145,11 @@ export default function Services() {
                 description={service.description}
                 badgeLabel={service.badge}
                 badgeVariant={service.variant}
+                imageSrc={service.image}
+                imageAlt={service.title}
                 href="#"
-                className="bg-[#0f172a] border-white/10 dark:hover:border-[#a5fe00]/50"
-              >
-                <div className="mt-4 flex items-center justify-end opacity-20 group-hover:opacity-100 transition-opacity duration-300">
-                  <service.icon className="w-12 h-12 text-[#a5fe00]" />
-                </div>
-              </TiltCard>
+                className="bg-white border-gray-200"
+              />
             </div>
           ))}
         </div>

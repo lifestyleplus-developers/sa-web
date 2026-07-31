@@ -25,11 +25,11 @@
   }
   
   .dark {
-    --background: #0F172A;
+    --background: #000000;
     --foreground: #F8FAFC;
-    --surface: #1E293B;
-    --surface-elevated: #334155;
-    --border: #334155;
+    --surface: #0a0a0a;
+    --surface-elevated: #111111;
+    --border: #333333;
     --accent: #DC2626;
     --secondary: #1E293B;
   }

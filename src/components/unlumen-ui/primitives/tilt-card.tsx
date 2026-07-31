@@ -45,31 +45,32 @@ export function TiltCard({
       {...tiltProps}
       className={cn(
         "relative group overflow-hidden",
-        "bg-background border border-border rounded-lg",
-        "flex flex-col gap-4",
-        "h-48 sm:h-52 md:h-56 w-full",
+        "bg-white border border-gray-200 rounded-lg",
+        "flex flex-col gap-2",
+        "h-32 sm:h-36 md:h-40 w-full",
+        "hover:bg-black hover:border-black transition-colors duration-300",
         "hover:shadow-lg hover:scale-105 transition-all duration-400 ease-out",
         className,
       )}
     >
-      <div className="flex flex-row transition-all duration-200 justify-between px-4 sm:px-6 py-4 sm:py-5">
-        <div className="flex flex-col gap-1 flex-1 mr-2">
-          <h2 className="text-lg tracking-tight leading-tight font-medium">
+      <div className="flex flex-col transition-all duration-200 items-center justify-center text-center px-4 sm:px-6 py-2 sm:py-3 h-full z-20 relative">
+        <div className="flex flex-col items-center justify-center gap-1 flex-1">
+          <h2 className="text-base md:text-lg tracking-tight leading-tight font-medium text-black group-hover:text-white transition-colors duration-300">
             {title}
           </h2>
           {description && (
-            <p className="text-foreground/50 text-sm">{description}</p>
+            <p className="text-black/70 group-hover:text-white/70 transition-colors duration-300 text-xs md:text-sm max-w-sm">{description}</p>
           )}
-          {children && <div className="mt-2">{children}</div>}
+          {children && <div className="mt-1 text-black group-hover:text-white transition-colors duration-300">{children}</div>}
         </div>
         {price && badgeLabel ? (
-          <div className="inline-flex h-fit items-center text-sm whitespace-nowrap shrink-0 z-20 relative">
-            <span className="rounded-l-full bg-secondary h-fit py-1 px-2 font-medium">
+          <div className="mt-2 inline-flex h-fit items-center text-xs whitespace-nowrap shrink-0 z-20 relative">
+            <span className="rounded-l-full bg-gray-100 group-hover:bg-gray-800 text-black group-hover:text-white transition-colors duration-300 h-fit py-1 px-2 font-medium">
               {price}
             </span>
             <span
               className={cn(
-                "rounded-r-full text-sm h-fit py-1 px-2 font-medium",
+                "rounded-r-full h-fit py-1 px-2 font-medium transition-colors duration-300",
                 BADGE_LABEL_CLASSES[badgeVariant],
               )}
             >
@@ -77,7 +78,7 @@ export function TiltCard({
             </span>
           </div>
         ) : price ? (
-          <span className="h-fit rounded-full bg-secondary px-3 py-1 text-sm font-medium whitespace-nowrap shrink-0 z-20 relative">
+          <span className="mt-2 h-fit rounded-full bg-gray-100 group-hover:bg-gray-800 text-black group-hover:text-white transition-colors duration-300 px-3 py-1 text-xs font-medium whitespace-nowrap shrink-0 z-20 relative">
             {price}
           </span>
         ) : null}
@@ -87,14 +88,14 @@ export function TiltCard({
         <img
           src={imageSrc}
           alt={imageAlt}
-          width={288}
-          height={224}
+          width={180}
+          height={140}
           loading="lazy"
           decoding="async"
           className={cn(
-            "absolute z-10 top-27 w-72 -right-10",
-            "rotate-[-5deg] border-border border rounded-md",
-            "transition-transform duration-300 ease-out",
+            "absolute z-10 -bottom-4 -right-4 w-40 object-cover",
+            "rotate-[-5deg] border-gray-200 border rounded-md shadow-sm",
+            "transition-transform duration-300 ease-out opacity-20 group-hover:opacity-10",
             "group-hover:-rotate-3 group-hover:-translate-y-1 group-hover:-translate-x-0.5",
           )}
         />
