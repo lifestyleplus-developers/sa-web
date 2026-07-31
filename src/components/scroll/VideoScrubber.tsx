@@ -134,6 +134,11 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     const section = sectionRef.current;
     if (!section) return;
 
+    // Refresh other scroll triggers on the page after our timeline initializes
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,

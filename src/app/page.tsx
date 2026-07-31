@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useState, useCallback } from "react";
 import { useLenis } from "@/components/scroll/useLenis";
 import Services from "@/components/home/Services";
+import HighlightedProjects from "@/components/home/HighlightedProjects";
 
 const VideoScrubber = dynamic(
   () => import("@/components/scroll/VideoScrubber"),
@@ -26,6 +27,8 @@ export default function Home() {
       <div className="-mt-[100vh] relative z-20">
         <Services />
       </div>
+
+      <HighlightedProjects />
 
       {/* Placeholder footer */}
       <section className="h-screen flex items-center justify-center bg-gray-100 relative z-10"

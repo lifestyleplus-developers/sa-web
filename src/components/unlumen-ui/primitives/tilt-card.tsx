@@ -39,26 +39,25 @@ export function TiltCard({
       {...tiltProps}
       className={cn(
         "relative group overflow-hidden",
-        "border border-gray-200 rounded-lg",
+        "rounded-lg",
         "h-48 sm:h-56 w-full",
         "hover:shadow-lg hover:scale-105 transition-all duration-400 ease-out",
         className,
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-white from-50% to-black opacity-100 group-hover:opacity-0 transition-opacity duration-500 z-0" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black from-50% to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0" />
+      <div className="absolute inset-0 bg-black group-hover:bg-white transition-colors duration-500 z-0" />
 
       <div className="relative z-10 flex flex-row w-full h-full">
-        <div className="w-[55%] sm:w-[60%] h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-          <h2 className="text-lg tracking-tight leading-tight font-medium text-black group-hover:text-white transition-colors duration-500 line-clamp-1">
+        <div className="w-[55%] sm:w-[60%] h-full flex flex-col items-center justify-center text-center px-6 sm:px-8">
+          <h2 className="text-xl tracking-tight leading-tight font-bold text-white group-hover:text-black transition-colors duration-500 line-clamp-1">
             {title}
           </h2>
           {description && (
-            <p className="mt-1 text-black/70 group-hover:text-white/70 transition-colors duration-500 text-xs sm:text-sm max-w-[95%] line-clamp-3">
+            <p className="mt-2 text-white/70 group-hover:text-black/70 transition-colors duration-500 text-xs sm:text-sm max-w-[95%] line-clamp-3">
               {description}
             </p>
           )}
-          {children && <div className="mt-2 text-black group-hover:text-white transition-colors duration-500">{children}</div>}
+          {children && <div className="mt-2 text-white group-hover:text-black transition-colors duration-500">{children}</div>}
         </div>
 
         <div className="w-[45%] sm:w-[40%] h-full relative flex items-center justify-center py-3 pr-3">
