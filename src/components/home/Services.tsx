@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { motion } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
 import { 
   Building2, 
@@ -16,7 +15,7 @@ import {
   Tractor 
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+// GSAP removed
 
 const services = [
   {
@@ -87,41 +86,6 @@ const services = [
 export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Select all cards inside the container
-    const cards = container.querySelectorAll(".service-card");
-
-    // Create a ScrollTrigger that animates cards in from the right as they enter the viewport
-    gsap.fromTo(
-      cards,
-      { 
-        x: 200, 
-        opacity: 0,
-      },
-      {
-        x: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: container,
-          start: "top 75%", // Starts when the top of container hits 75% of viewport
-          end: "bottom 80%",
-          // scrub: 1, // Optional: if we want it tied exactly to scroll, otherwise it just plays once triggered
-          toggleActions: "play none none reverse", // Play on enter, reverse on leave back up
-        },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
-
   return (
     <section 
       ref={containerRef}
@@ -139,7 +103,14 @@ export default function Services() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-h-[70vh] overflow-visible">
           {services.map((service, index) => (
-            <div key={index} className="service-card w-full">
+            <motion.div 
+              key={index} 
+              className="service-card w-full"
+              initial={{ opacity: 0, y: 70 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: index * 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+            >
               <TiltCard
                 title={service.title}
                 description={service.description}
@@ -150,7 +121,7 @@ export default function Services() {
                 href="#"
                 className="bg-white border-gray-200"
               />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
