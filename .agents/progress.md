@@ -9,9 +9,9 @@
 - [x] Mobile notch color fix (Theme Color)
 
 ## Phase 2: Services Section
-- [ ] Build the "Services Provided" section structure
-- [ ] Integrate content from 9 core services (Office Dismantling, IT Equipment, etc.)
-- [ ] Implement premium GSAP transitions (e.g., horizontal scroll or staggered 3D card reveal)
+- [x] Build the "Services Provided" section structure
+- [x] Integrate content from 9 core services (Office Dismantling, IT Equipment, etc.)
+- [x] Implement premium GSAP transitions (staggered 3D card tilt reveal from right)
 - [ ] Ensure "WE BUY - WE DO NOT SELL" messaging is prominent
 
 ## Phase 3: Highlighted Projects

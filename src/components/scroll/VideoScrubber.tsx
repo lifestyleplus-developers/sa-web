@@ -171,20 +171,21 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     tl.fromTo(text2Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.75);
     tl.fromTo(text3Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.8);
 
-    // Zoom in and blur video, push texts up (from 85% to 100%)
+    // Zoom in and blur video (from 80% to 90%)
     tl.to(canvasRef.current, {
       scale: 3,
       filter: "blur(12px)",
-      duration: 0.15,
-      ease: "power2.in"
-    }, 0.85);
+      duration: 0.1,
+      ease: "power2.inOut"
+    }, 0.8);
 
+    // Push texts up (from 90% to 100%) synchronizing with the overlapping Services section
     tl.to(textsContainerRef.current, {
-      y: "-50vh",
+      y: "-100vh",
       opacity: 0,
-      duration: 0.15,
-      ease: "power2.in"
-    }, 0.85);
+      duration: 0.1,
+      ease: "none"
+    }, 0.9);
 
     return () => {
       tl.scrollTrigger?.kill();
@@ -196,10 +197,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     <div>
       <div
         ref={sectionRef}
-        style={{ height: `${SCROLL_MULTIPLIER * 100}vh` }}
-        className="relative w-full"
-      >
-      <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden"
+        className="relative w-full h-screen flex items-center justify-center overflow-hidden"
         style={{ backgroundColor: "white" }}
       >
         <div 
@@ -248,7 +246,6 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
               Get Paid
             </h2>
           </div>
-        </div>
         </div>
       </div>
     </div>
