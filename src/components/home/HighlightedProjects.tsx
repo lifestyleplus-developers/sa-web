@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function HighlightedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // Increased to 400vh to give plenty of room for both the fly-through and the horizontal scroll
   const { scrollYProgress } = useScroll({
@@ -18,16 +19,16 @@ export default function HighlightedProjects() {
   const textScale = useTransform(
     scrollYProgress,
     [0, 0.15, 0.3, 0.45],
-    [1, 5, 20, 500]
+    shouldReduceMotion ? [1, 1, 1, 1] : [1, 5, 20, 500]
   );
   
   // Fade in the horizontal track (0.45 to 0.5)
-  const trackOpacity = useTransform(scrollYProgress, [0.45, 0.5], [0, 1]);
+  const trackOpacity = useTransform(scrollYProgress, [0.45, 0.5], shouldReduceMotion ? [1, 1] : [0, 1]);
   
   // Scroll the track horizontally (0.5 to 0.9)
-  // Stops at 0.9 to give the user a "rest" period to view the final cards before unpinning
+  // Stops at 0.9 to give the user a rest period to view the final cards before unpinning
   // Increased translation to -75% so the final Explore All button comes fully into view
-  const trackX = useTransform(scrollYProgress, [0.5, 0.9], ["0%", "-75%"]);
+  const trackX = useTransform(scrollYProgress, [0.5, 0.9], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-75%"]);
 
   return (
     <section ref={containerRef} className="relative z-30 bg-black h-[400vh] w-full">
@@ -40,8 +41,8 @@ export default function HighlightedProjects() {
             src="/images/highlighted-project.png"
             alt="Highlighted Project"
             fill
+            sizes="100vw"
             className="object-cover"
-            priority
           />
         </div>
 
@@ -82,7 +83,7 @@ export default function HighlightedProjects() {
                 <span className="text-[#FACC15]">Projects</span>
               </h2>
               <p className="text-gray-200 mt-6 text-xl font-medium drop-shadow-md border-l-4 border-[#FACC15] pl-4">
-                Handling Bengaluru's largest commercial dismantling sites with unmatched precision.
+                Handling Bengaluru&apos;s largest commercial dismantling sites with unmatched precision.
               </p>
             </div>
 
@@ -141,7 +142,7 @@ function ProjectCard({ title, area, type, desc, image }: { title: string, area: 
       
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0 transition-transform duration-700 ease-out group-hover:scale-110">
-        <Image src={image} alt={title} fill className="object-cover opacity-80" />
+        <Image src={image} alt={title} fill sizes="400px" className="object-cover opacity-80" />
       </div>
 
       {/* Gradient Overlay for Text Readability */}

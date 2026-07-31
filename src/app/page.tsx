@@ -1,8 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useCallback } from "react";
-import { useLenis } from "@/components/scroll/useLenis";
 import Services from "@/components/home/Services";
 import HighlightedProjects from "@/components/home/HighlightedProjects";
 
@@ -12,17 +10,10 @@ const VideoScrubber = dynamic(
 );
 
 export default function Home() {
-  useLenis();
-  const [progress, setProgress] = useState(0);
-
-  const handleProgress = useCallback((p: number) => {
-    setProgress(p);
-  }, []);
-
   return (
     <main style={{ backgroundColor: "white" }}>
 
-      <VideoScrubber onProgress={handleProgress} />
+      <VideoScrubber />
 
       <div className="-mt-[100vh] relative z-20">
         <Services />

@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "motion/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 240;
+const TOTAL_FRAMES = 300;
 const SCROLL_MULTIPLIER = 10; // 1000vh total scroll distance
+const PRELOAD_CONCURRENCY = 6;
 
 // Zero-pad helper: 1 → "001"
 function framePath(index: number): string {
@@ -15,11 +17,7 @@ function framePath(index: number): string {
   return `/frames/ezgif-frame-${padded}.png`;
 }
 
-interface VideoScrubberProps {
-  onProgress?: (progress: number) => void;
-}
-
-export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
+export default function VideoScrubber() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -34,43 +32,66 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
   const rafRef = useRef<number>(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   // Preload all frames
   useEffect(() => {
     const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    const framesToLoad = shouldReduceMotion ? 1 : TOTAL_FRAMES;
+    let completedCount = 0;
+    let nextFrame = 0;
+    let cancelled = false;
 
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const completeFrame = () => {
+      completedCount++;
+      setLoadProgress(Math.round((completedCount / framesToLoad) * 100));
+
+      if (nextFrame < framesToLoad) {
+        loadNextFrame();
+      } else if (completedCount === framesToLoad && !cancelled) {
+        setLoaded(true);
+      }
+    };
+
+    const loadNextFrame = () => {
+      const index = nextFrame++;
       const img = new Image();
-      img.src = framePath(i);
-      img.onload = () => {
-        loadedCount++;
-        setLoadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
-        if (loadedCount === TOTAL_FRAMES) {
-          setLoaded(true);
-          // Draw first frame immediately
-          drawFrame(0);
-        }
-      };
-      images.push(img);
+      images[index] = img;
+      img.onload = completeFrame;
+      img.onerror = completeFrame;
+      img.src = framePath(index + 1);
+    };
+
+    for (let i = 0; i < Math.min(PRELOAD_CONCURRENCY, framesToLoad); i++) {
+      loadNextFrame();
     }
 
     imagesRef.current = images;
 
     return () => {
+      cancelled = true;
+      images.forEach((img) => {
+        img.onload = null;
+        img.onerror = null;
+      });
       imagesRef.current = [];
     };
-  }, []);
+  }, [shouldReduceMotion]);
+
+  useEffect(() => {
+    if (!loaded) return;
+    drawFrame(0);
+  }, [loaded]);
 
   function drawFrame(index: number) {
     const canvas = canvasRef.current;
     const img = imagesRef.current[index];
-    if (!canvas || !img) return;
+    if (!canvas || !img || !img.naturalWidth || !img.naturalHeight) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Cover-fit the image on the canvas
-    let scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+    const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
     
 
     const x = (canvas.width - img.naturalWidth * scale) / 2;
@@ -80,7 +101,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
 
   // Smooth easing RAF loop with 60 FPS throttle
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || shouldReduceMotion) return;
 
     let lastTime = 0;
     const fps = 60;
@@ -112,7 +133,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
 
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [loaded]);
+  }, [loaded, shouldReduceMotion]);
 
   // Resize canvas to match window
   useEffect(() => {
@@ -130,12 +151,12 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
 
   // ScrollTrigger wiring
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || shouldReduceMotion) return;
     const section = sectionRef.current;
     if (!section) return;
 
     // Refresh other scroll triggers on the page after our timeline initializes
-    setTimeout(() => {
+    const refreshTimeout = window.setTimeout(() => {
       ScrollTrigger.refresh();
     }, 100);
 
@@ -153,7 +174,6 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
             TOTAL_FRAMES - 1,
             Math.floor(videoProgress * TOTAL_FRAMES)
           );
-          onProgress?.(progress);
         },
       },
     });
@@ -192,10 +212,11 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     }, 0.9);
 
     return () => {
+      window.clearTimeout(refreshTimeout);
       tl.scrollTrigger?.kill();
       tl.kill();
     };
-  }, [loaded, onProgress]);
+  }, [loaded, shouldReduceMotion]);
 
   return (
     <div>
@@ -239,7 +260,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
           {/* Cascading Texts overlay */}
           <div 
             ref={textsContainerRef}
-            className="absolute inset-0 z-20 flex flex-col justify-end items-center pb-24 md:pb-32 pointer-events-none overflow-hidden"
+            className={`absolute inset-0 z-20 flex flex-col justify-end items-center pb-24 md:pb-32 pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
           >
             <h2 ref={text1Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
               Call Us

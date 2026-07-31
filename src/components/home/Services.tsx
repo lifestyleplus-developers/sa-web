@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
 import { 
   Building2, 
@@ -84,7 +84,9 @@ const services = [
 ];
 
 export default function Services() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const isServicesInView = useInView(containerRef, { amount: 0.2, once: true });
 
   return (
     <section 
@@ -106,10 +108,11 @@ export default function Services() {
             <motion.div 
               key={index} 
               className="service-card w-full"
-              initial={{ opacity: 0, y: 70 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.7, delay: index * 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 70 }}
+              animate={shouldReduceMotion || isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 70 }}
+              transition={shouldReduceMotion
+                ? { duration: 0 }
+                : { duration: 0.45, delay: index * 0.08, ease: [0.21, 0.47, 0.32, 0.98] }}
             >
               <TiltCard
                 title={service.title}
