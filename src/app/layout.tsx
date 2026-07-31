@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
@@ -72,6 +72,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
