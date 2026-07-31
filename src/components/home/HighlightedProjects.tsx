@@ -24,8 +24,10 @@ export default function HighlightedProjects() {
   // Fade in the horizontal track (0.45 to 0.5)
   const trackOpacity = useTransform(scrollYProgress, [0.45, 0.5], [0, 1]);
   
-  // Scroll the track horizontally (0.5 to 1)
-  const trackX = useTransform(scrollYProgress, [0.5, 1], ["0%", "-65%"]);
+  // Scroll the track horizontally (0.5 to 0.9)
+  // Stops at 0.9 to give the user a "rest" period to view the final cards before unpinning
+  // Increased translation to -75% so the final Explore All button comes fully into view
+  const trackX = useTransform(scrollYProgress, [0.5, 0.9], ["0%", "-75%"]);
 
   return (
     <section ref={containerRef} className="relative z-30 bg-black h-[400vh] w-full">
@@ -132,31 +134,54 @@ export default function HighlightedProjects() {
   );
 }
 
-// Subcomponent for the bright, contrasting project cards
+// Subcomponent for the premium cinematic project cards
 function ProjectCard({ title, area, type, desc, image }: { title: string, area: string, type: string, desc: string, image: string }) {
   return (
-    <div className="w-[450px] h-[550px] bg-white text-black shrink-0 flex flex-col justify-between p-8 rounded-2xl shadow-2xl relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500">
-      <div className="z-10">
-        <div className="inline-block px-4 py-1 bg-black text-white text-xs font-bold uppercase tracking-widest mb-6">
-          {type}
+    <div className="w-[400px] h-[550px] shrink-0 relative overflow-hidden rounded-2xl border border-white/10 group cursor-pointer bg-[#0a0a0a]">
+      
+      {/* Background Image */}
+      <div className="absolute inset-0 w-full h-full z-0 transition-transform duration-700 ease-out group-hover:scale-110">
+        <Image src={image} alt={title} fill className="object-cover opacity-80" />
+      </div>
+
+      {/* Gradient Overlay for Text Readability */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
+
+      {/* Content Layer */}
+      <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
+        <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
+          
+          <div className="inline-block px-3 py-1 bg-[#FACC15] text-black text-[10px] font-black uppercase tracking-widest mb-4">
+            {type}
+          </div>
+          
+          <h3 className="text-3xl font-black uppercase tracking-tight text-white leading-[1.1] mb-3">
+            {title}
+          </h3>
+          
+          <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">
+            {desc}
+          </p>
+          
+          <div className="flex items-center gap-4 border-t border-white/20 pt-5">
+            <div>
+              <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Total Scale</span>
+              <span className="block text-xl font-black text-white">{area}</span>
+            </div>
+            <div className="ml-auto">
+              <div className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#FACC15] group-hover:border-[#FACC15] group-hover:text-black">
+                <svg className="w-5 h-5 -rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <h3 className="text-4xl font-black uppercase tracking-tight leading-none mb-4 group-hover:text-red-600 transition-colors">
-          {title}
-        </h3>
-        <p className="text-gray-600 text-lg leading-relaxed font-medium">
-          {desc}
-        </p>
       </div>
-
-      <div className="z-10 flex flex-col border-t-2 border-black pt-6 mt-auto">
-        <span className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Total Scale</span>
-        <span className="text-3xl font-black">{area}</span>
-      </div>
-
-      {/* Subtle background industrial pattern or image to add texture without reducing contrast */}
-      <div className="absolute -bottom-20 -right-20 w-64 h-64 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-        <Image src={image} alt="Background Texture" fill className="object-cover rounded-full grayscale" />
-      </div>
+      
+      {/* Subtle border glow on hover */}
+      <div className="absolute inset-0 rounded-2xl border-2 border-transparent transition-colors duration-500 z-30 pointer-events-none group-hover:border-white/20" />
     </div>
   );
 }
