@@ -138,8 +138,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: `+=${SCROLL_MULTIPLIER * 100}%`,
-        pin: true,
+        end: "bottom bottom",
         scrub: true,
         onUpdate: (self) => {
           const progress = self.progress;
@@ -197,11 +196,12 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     <div>
       <div
         ref={sectionRef}
-        className="relative w-full h-screen flex items-center justify-center overflow-hidden"
-        style={{ backgroundColor: "white" }}
+        className="relative w-full"
+        style={{ height: `${(SCROLL_MULTIPLIER + 1) * 100}vh`, backgroundColor: "white" }}
       >
-        <div 
-          ref={cardRef} 
+        <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: "white" }}>
+          <div 
+            ref={cardRef} 
           className="w-[92vw] h-[92vh] md:w-[96vw] md:h-[94vh] rounded-[32px] md:rounded-[40px] relative overflow-hidden bg-black flex flex-col justify-between"
         >
           {/* Loading screen */}
@@ -248,6 +248,7 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
