@@ -17,13 +17,7 @@ export interface TiltCardProps extends React.HTMLAttributes<HTMLDivElement> {
   tiltProps?: Omit<TiltProps, "children" | "className">;
 }
 
-const BADGE_LABEL_CLASSES: Record<
-  NonNullable<TiltCardProps["badgeVariant"]>,
-  string
-> = {
-  success: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  warning: "bg-amber-500/20 text-amber-700 dark:text-amber-300",
-};
+// BADGE_LABEL_CLASSES removed
 
 export function TiltCard({
   title,
@@ -46,59 +40,41 @@ export function TiltCard({
       className={cn(
         "relative group overflow-hidden",
         "bg-white border border-gray-200 rounded-lg",
-        "flex flex-col gap-2",
-        "h-32 sm:h-36 md:h-40 w-full",
+        "flex flex-col",
+        "h-48 sm:h-56 w-full",
         "hover:bg-black hover:border-black transition-colors duration-300",
         "hover:shadow-lg hover:scale-105 transition-all duration-400 ease-out",
         className,
       )}
     >
-      <div className="flex flex-col transition-all duration-200 items-center justify-center text-center px-4 sm:px-6 py-2 sm:py-3 h-full z-20 relative">
-        <div className="flex flex-col items-center justify-center gap-1 flex-1">
-          <h2 className="text-base md:text-lg tracking-tight leading-tight font-medium text-black group-hover:text-white transition-colors duration-300">
+      <div className="flex flex-col transition-all duration-200 items-start text-left pl-8 sm:pl-12 pr-4 sm:pr-6 pt-8 sm:pt-10 z-20 relative">
+        <div className="flex flex-col items-start gap-1 w-full">
+          <h2 className="text-lg tracking-tight leading-tight font-medium text-black group-hover:text-white transition-colors duration-300 line-clamp-1">
             {title}
           </h2>
           {description && (
-            <p className="text-black/70 group-hover:text-white/70 transition-colors duration-300 text-xs md:text-sm max-w-sm">{description}</p>
+            <p className="text-black/70 group-hover:text-white/70 transition-colors duration-300 text-xs sm:text-sm max-w-[95%] line-clamp-2">{description}</p>
           )}
           {children && <div className="mt-1 text-black group-hover:text-white transition-colors duration-300">{children}</div>}
         </div>
-        {price && badgeLabel ? (
-          <div className="mt-2 inline-flex h-fit items-center text-xs whitespace-nowrap shrink-0 z-20 relative">
-            <span className="rounded-l-full bg-gray-100 group-hover:bg-gray-800 text-black group-hover:text-white transition-colors duration-300 h-fit py-1 px-2 font-medium">
-              {price}
-            </span>
-            <span
-              className={cn(
-                "rounded-r-full h-fit py-1 px-2 font-medium transition-colors duration-300",
-                BADGE_LABEL_CLASSES[badgeVariant],
-              )}
-            >
-              {badgeLabel}
-            </span>
-          </div>
-        ) : price ? (
-          <span className="mt-2 h-fit rounded-full bg-gray-100 group-hover:bg-gray-800 text-black group-hover:text-white transition-colors duration-300 px-3 py-1 text-xs font-medium whitespace-nowrap shrink-0 z-20 relative">
-            {price}
-          </span>
-        ) : null}
       </div>
 
       {imageSrc && (
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          width={180}
-          height={140}
-          loading="lazy"
-          decoding="async"
-          className={cn(
-            "absolute z-10 -bottom-4 -right-4 w-40 object-cover",
-            "rotate-[-5deg] border-gray-200 border rounded-md shadow-sm",
-            "transition-transform duration-300 ease-out opacity-20 group-hover:opacity-10",
-            "group-hover:-rotate-3 group-hover:-translate-y-1 group-hover:-translate-x-0.5",
-          )}
-        />
+        <div className="flex-1 w-full relative mt-3 sm:mt-4 flex items-end justify-center px-4 pb-0 z-10 overflow-hidden">
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            width={400}
+            height={300}
+            loading="lazy"
+            decoding="async"
+            className={cn(
+              "w-full h-full object-cover object-top rounded-t-lg shadow-sm border border-b-0 border-gray-200",
+              "transition-transform duration-300 ease-out",
+              "group-hover:-translate-y-1 group-hover:scale-105 group-hover:border-white/20",
+            )}
+          />
+        </div>
       )}
 
       <ClippedCircle circleClassName="bg-white/10 dark:bg-white/5" circleSize={800} />
