@@ -22,6 +22,7 @@ interface VideoScrubberProps {
 export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
@@ -129,60 +130,81 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
     const section = sectionRef.current;
     if (!section) return;
 
-    const trigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: `+=${SCROLL_MULTIPLIER * 100}%`,
-      pin: true,
-      scrub: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        targetFrameRef.current = Math.min(
-          TOTAL_FRAMES - 1,
-          Math.floor(progress * TOTAL_FRAMES)
-        );
-        onProgress?.(progress);
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: `+=${SCROLL_MULTIPLIER * 100}%`,
+        pin: true,
+        scrub: true,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          targetFrameRef.current = Math.min(
+            TOTAL_FRAMES - 1,
+            Math.floor(progress * TOTAL_FRAMES)
+          );
+          onProgress?.(progress);
+        },
       },
     });
 
-    return () => trigger.kill();
+    // Expand the card in the first 15% of the timeline
+    tl.to(cardRef.current, {
+      width: "100vw",
+      height: "100vh",
+      borderRadius: "0px",
+      ease: "none",
+      duration: 0.15,
+    }, 0);
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+    };
   }, [loaded, onProgress]);
 
   return (
-    <div
-      ref={sectionRef}
-      style={{ height: `${SCROLL_MULTIPLIER * 100}vh` }}
-      className="relative w-full"
-    >
-      <div className="sticky top-0 w-full h-screen overflow-hidden"
-        style={{ backgroundColor: "#d4cfc9" }}
+    <div>
+      <div
+        ref={sectionRef}
+        style={{ height: `${SCROLL_MULTIPLIER * 100}vh` }}
+        className="relative w-full"
       >
-        {/* Loading screen */}
-        {!loaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center z-10"
-            style={{ backgroundColor: "#d4cfc9" }}
-          >
-            <p className="text-[var(--color-text-secondary)] text-sm tracking-widest uppercase mb-4">
-              Loading
-            </p>
-            <div className="w-48 h-0.5 bg-[var(--color-border)] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[var(--color-accent)] transition-all duration-100"
-                style={{ width: `${loadProgress}%` }}
-              />
+      <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden"
+        style={{ backgroundColor: "white" }}
+      >
+        <div 
+          ref={cardRef} 
+          className="w-[92vw] h-[92vh] md:w-[96vw] md:h-[94vh] rounded-[32px] md:rounded-[40px] relative overflow-hidden bg-black flex flex-col justify-between"
+        >
+          {/* Loading screen */}
+          {!loaded && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center z-30"
+              style={{ backgroundColor: "white" }}
+            >
+              <p className="text-[var(--color-text-secondary)] text-sm tracking-widest uppercase mb-4">
+                Loading
+              </p>
+              <div className="w-48 h-0.5 bg-[var(--color-border)] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[var(--color-accent)] transition-all duration-100"
+                  style={{ width: `${loadProgress}%` }}
+                />
+              </div>
+              <p className="text-[var(--color-text-muted)] text-xs mt-2 font-mono">
+                {loadProgress}%
+              </p>
             </div>
-            <p className="text-[var(--color-text-muted)] text-xs mt-2 font-mono">
-              {loadProgress}%
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* Canvas — same bg as frames so office floats */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
-          style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s" }}
-        />
+          {/* Canvas — same bg as frames so office floats */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full z-0 object-cover"
+            style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s" }}
+          />
+        </div>
+        </div>
       </div>
     </div>
   );
