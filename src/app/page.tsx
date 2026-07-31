@@ -23,8 +23,7 @@ export default function Home() {
       <VideoScrubber onProgress={handleProgress} />
 
       {/* Placeholder footer */}
-      <section className="h-screen flex items-center justify-center"
-        style={{ backgroundColor: "white" }}
+      <section className="h-screen flex items-center justify-center bg-gray-100 relative z-10"
       >
         <p className="text-[var(--color-text-muted)] text-sm tracking-widest uppercase">
           Contact section — coming in Step 11

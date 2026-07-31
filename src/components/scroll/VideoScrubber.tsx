@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const TOTAL_FRAMES = 240;
-const SCROLL_MULTIPLIER = 6; // 600vh total scroll distance
+const SCROLL_MULTIPLIER = 10; // 1000vh total scroll distance
 
 // Zero-pad helper: 1 → "001"
 function framePath(index: number): string {
@@ -23,6 +23,10 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const text1Ref = useRef<HTMLHeadingElement>(null);
+  const text2Ref = useRef<HTMLHeadingElement>(null);
+  const text3Ref = useRef<HTMLHeadingElement>(null);
+  const textsContainerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
@@ -139,23 +143,48 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
         scrub: true,
         onUpdate: (self) => {
           const progress = self.progress;
+          // Map 0-0.7 scroll progress to 0-1 video progress
+          const videoProgress = Math.min(1, Math.max(0, progress / 0.7));
           targetFrameRef.current = Math.min(
             TOTAL_FRAMES - 1,
-            Math.floor(progress * TOTAL_FRAMES)
+            Math.floor(videoProgress * TOTAL_FRAMES)
           );
           onProgress?.(progress);
         },
       },
     });
 
-    // Expand the card in the first 15% of the timeline
+    // Expand the card in the first 10% of the timeline
     tl.to(cardRef.current, {
       width: "100vw",
       height: "100vh",
       borderRadius: "0px",
       ease: "none",
-      duration: 0.15,
+      duration: 0.1,
     }, 0);
+
+    // Dim the video starting at 70% to make text pop
+    tl.to(canvasRef.current, { opacity: 0.4, duration: 0.1, ease: "power1.inOut" }, 0.7);
+
+    // Texts cascade down between 70% and 85%
+    tl.fromTo(text1Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.7);
+    tl.fromTo(text2Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.75);
+    tl.fromTo(text3Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.8);
+
+    // Zoom in and blur video, push texts up (from 85% to 100%)
+    tl.to(canvasRef.current, {
+      scale: 3,
+      filter: "blur(12px)",
+      duration: 0.15,
+      ease: "power2.in"
+    }, 0.85);
+
+    tl.to(textsContainerRef.current, {
+      y: "-50vh",
+      opacity: 0,
+      duration: 0.15,
+      ease: "power2.in"
+    }, 0.85);
 
     return () => {
       tl.scrollTrigger?.kill();
@@ -203,6 +232,22 @@ export default function VideoScrubber({ onProgress }: VideoScrubberProps) {
             className="absolute inset-0 w-full h-full z-0 object-cover"
             style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s" }}
           />
+
+          {/* Cascading Texts overlay */}
+          <div 
+            ref={textsContainerRef}
+            className="absolute inset-0 z-20 flex flex-col justify-end items-center pb-24 md:pb-32 pointer-events-none overflow-hidden"
+          >
+            <h2 ref={text1Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
+              Call Us
+            </h2>
+            <h2 ref={text2Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
+              Get Packing
+            </h2>
+            <h2 ref={text3Ref} className="text-[#a5fe00] text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
+              Get Paid
+            </h2>
+          </div>
         </div>
         </div>
       </div>
