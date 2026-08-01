@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Services from "@/components/home/Services";
 import HighlightedProjects from "@/components/home/HighlightedProjects";
+import Footer from "@/components/home/Footer";
 
 const VideoScrubber = dynamic(
   () => import("@/components/scroll/VideoScrubber"),
@@ -21,13 +22,7 @@ export default function Home() {
 
       <HighlightedProjects />
 
-      {/* Placeholder footer */}
-      <section className="h-screen flex items-center justify-center bg-gray-100 relative z-10"
-      >
-        <p className="text-[var(--color-text-muted)] text-sm tracking-widest uppercase">
-          Contact section — coming in Step 11
-        </p>
-      </section>
+      <Footer />
     </main>
   );
 }
