@@ -35,10 +35,7 @@ const services = [
 
 const quickLinks = [
   { label: "Home",               href: "/" },
-  { label: "Completed Projects", href: "/completed-projects" },
-  { label: "About Us",           href: "/about-us" },
-  { label: "Gallery",            href: "/gallery" },
-  { label: "Contact Us",         href: "/contact-us" },
+  { label: "All Projects", href: "/projects" }
 ];
 
 /* ────────────────────── MAGNETIC BUTTON ────────────────────── */
@@ -83,10 +80,10 @@ function MagneticCTA({
       href={href}
       onMouseMove={handleMouse}
       onMouseLeave={handleMouseLeave}
-      style={{ x: springX, y: springY }}
+      style={{ x: springX, y: springY, padding: '1.5rem 3.5rem', fontSize: '1.5rem' }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
-      className="group relative inline-flex items-center gap-3 bg-[#DC2626] text-white px-10 py-5 rounded-full font-bold text-lg uppercase tracking-widest cursor-pointer transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(220,38,38,0.5)]"
+      className="group relative inline-flex items-center gap-3 bg-[#DC2626] text-white rounded-full font-black uppercase tracking-widest cursor-pointer transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(220,38,38,0.5)]"
     >
       {children}
       <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -208,6 +205,40 @@ function RevealGroup({
   );
 }
 
+/* ────────────────── TEXT REVEAL WRAPPER ─────────────────── */
+
+function WordReveal({
+  children,
+  delay = 0,
+  inView = false,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  inView?: boolean;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  return (
+    <span className="inline-flex overflow-hidden pb-2 -mb-2 px-1 -mx-1">
+      <motion.span
+        initial={shouldReduceMotion ? false : { y: "120%", rotate: 4 }}
+        animate={
+          inView || shouldReduceMotion
+            ? { y: "0%", rotate: 0 }
+            : { y: "120%", rotate: 4 }
+        }
+        transition={{
+          duration: 1.2,
+          delay: delay,
+          ease: [0.19, 1, 0.22, 1], // Snappy cinematic ease
+        }}
+        className="inline-block origin-top-left"
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════
    MAIN FOOTER COMPONENT
    ═══════════════════════════════════════════════════════════ */
@@ -255,26 +286,20 @@ export default function Footer() {
           {/* Radial glow */}
           <div className="absolute w-[600px] h-[600px] rounded-full bg-[#DC2626]/10 blur-[120px] pointer-events-none" />
 
-          <motion.h2
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 40 }}
-            animate={
-              ctaInView
-                ? { opacity: 1, y: 0 }
-                : shouldReduceMotion
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 40 }
-            }
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }
-            }
-            className="relative text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[0.95] max-w-4xl mb-6"
-          >
-            Call Us Today for a
-            <br />
-            <span className="text-[#DC2626]">Free Site Visit</span>
-          </motion.h2>
+          <h2 className="relative text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[0.95] max-w-4xl mb-6">
+            <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2">
+              <WordReveal inView={ctaInView} delay={0.0}>Call</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.05}>Us</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.1}>Today</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.15}>For</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.2}>A</WordReveal>
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2 text-[#DC2626] mt-2 md:mt-4">
+              <WordReveal inView={ctaInView} delay={0.25}>Free</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.3}>Site</WordReveal>
+              <WordReveal inView={ctaInView} delay={0.35}>Visit</WordReveal>
+            </div>
+          </h2>
 
           <motion.p
             initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
@@ -290,7 +315,7 @@ export default function Footer() {
                 ? { duration: 0 }
                 : {
                     duration: 0.7,
-                    delay: 0.15,
+                    delay: 0.6,
                     ease: [0.21, 0.47, 0.32, 0.98],
                   }
             }
@@ -313,10 +338,11 @@ export default function Footer() {
                 ? { duration: 0 }
                 : {
                     duration: 0.6,
-                    delay: 0.3,
+                    delay: 0.75,
                     ease: [0.21, 0.47, 0.32, 0.98],
                   }
             }
+            style={{ marginTop: '4rem' }}
             className="relative"
           >
             <MagneticCTA href="tel:+919164941338">Call Now</MagneticCTA>
@@ -327,10 +353,10 @@ export default function Footer() {
         <InfiniteMarquee />
 
         {/* ─────────── Footer Grid ─────────── */}
-        <div className="w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-28">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:justify-items-center">
+        <div className="w-full flex justify-center px-6" style={{ paddingTop: '3rem', paddingBottom: '2rem' }}>
+          <div className="flex flex-wrap justify-center gap-12 md:gap-16 xl:gap-24 w-fit max-w-7xl">
             {/* Col 1 — Brand */}
-            <RevealGroup className="flex flex-col gap-5 lg:col-span-1 w-fit">
+            <RevealGroup className="flex flex-col items-center text-center gap-5 w-full md:w-80">
               <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight">
                 S.A. <span className="text-[#DC2626]">Traders</span>
               </h3>
@@ -342,7 +368,7 @@ export default function Footer() {
                 used-equipment buyback in Bengaluru. We buy — we do not sell.
               </p>
               {/* Contact quick-action buttons */}
-              <div className="flex gap-3 mt-2">
+              <div className="flex justify-center gap-3 mt-2">
                 <a
                   href="tel:+919164941338"
                   aria-label="Call S.A. Traders"
@@ -371,21 +397,21 @@ export default function Footer() {
 
             {/* Col 2 — Quick Links */}
             <RevealGroup
-              className="flex flex-col gap-6 w-fit"
+              className="flex flex-col items-center text-center gap-6 w-full md:w-auto"
               staggerDelay={0.06}
             >
               <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
                 Quick Links
               </h4>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col items-center gap-4">
                 {quickLinks.map((link) => (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
+                    className="group relative text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
                   >
-                    <span className="w-0 h-px bg-[#DC2626] transition-all duration-300 group-hover:w-4 shrink-0" />
                     {link.label}
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[#DC2626] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>
@@ -393,21 +419,21 @@ export default function Footer() {
 
             {/* Col 3 — Services */}
             <RevealGroup
-              className="flex flex-col gap-6 w-fit"
+              className="flex flex-col items-center text-center gap-6 w-full md:w-auto"
               staggerDelay={0.05}
             >
               <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
                 Services
               </h4>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col items-center gap-4">
                 {services.slice(0, 6).map((s) => (
                   <Link
                     key={s.label}
                     href={s.href}
-                    className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
+                    className="group relative text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
                   >
-                    <span className="w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-4 shrink-0" />
                     {s.label}
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>
@@ -415,7 +441,7 @@ export default function Footer() {
 
             {/* Col 4 — Contact */}
             <RevealGroup
-              className="flex flex-col gap-6 w-fit"
+              className="flex flex-col items-center text-center gap-6 w-full md:w-auto"
               staggerDelay={0.1}
             >
               <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30 mb-3">
@@ -424,17 +450,17 @@ export default function Footer() {
 
               <a
                 href="tel:+919164941338"
-                className="group flex items-start gap-3 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
+                className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <Phone className="w-4 h-4 mt-0.5 text-[#DC2626] shrink-0" />
+                <Phone className="w-5 h-5 text-[#DC2626] shrink-0" />
                 <span>+91 91649 41338</span>
               </a>
 
               <a
                 href="mailto:satraders78611@gmail.com"
-                className="group flex items-start gap-3 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
+                className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <Mail className="w-4 h-4 mt-0.5 text-[#DC2626] shrink-0" />
+                <Mail className="w-5 h-5 text-[#DC2626] shrink-0" />
                 <span>satraders78611@gmail.com</span>
               </a>
 
@@ -442,9 +468,9 @@ export default function Footer() {
                 href="https://maps.app.goo.gl/o3c1mK3Jcaq43shq7"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-start gap-3 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
+                className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <MapPin className="w-4 h-4 mt-0.5 text-[#DC2626] shrink-0" />
+                <MapPin className="w-5 h-5 text-[#DC2626] shrink-0" />
                 <span>
                   Bengaluru, Karnataka
                   <br />
@@ -452,29 +478,6 @@ export default function Footer() {
                 </span>
               </a>
             </RevealGroup>
-          </div>
-        </div>
-
-        {/* ─────────── Bottom Bar ─────────── */}
-        <div className="border-t border-white/10">
-          <div className="w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-20 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-white/30 text-xs">
-            <p>
-              &copy; {year} S.A. Traders Office Dismantling. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <Link
-                href="/privacy"
-                className="hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Terms of Service
-              </Link>
-            </div>
           </div>
         </div>
       </footer>
