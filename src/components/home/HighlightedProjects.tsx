@@ -9,29 +9,28 @@ export default function HighlightedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Increased to 400vh to give plenty of room for both the fly-through and the horizontal scroll
+  // Increased to 600vh to slow down the scroll and give plenty of room for animations
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Fly-through text scaling (completes by 0.45)
+  // Fly-through text scaling (completes by 0.35)
   const textScale = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.3, 0.45],
+    [0, 0.1, 0.2, 0.35],
     shouldReduceMotion ? [1, 1, 1, 1] : [1, 5, 20, 500]
   );
   
-  // Fade in the horizontal track (0.45 to 0.5)
-  const trackOpacity = useTransform(scrollYProgress, [0.45, 0.5], shouldReduceMotion ? [1, 1] : [0, 1]);
+  // Fade in the horizontal track (0.35 to 0.4)
+  const trackOpacity = useTransform(scrollYProgress, [0.35, 0.4], shouldReduceMotion ? [1, 1] : [0, 1]);
   
-  // Scroll the track horizontally (0.5 to 0.9)
-  // Stops at 0.9 to give the user a rest period to view the final cards before unpinning
-  // Increased translation to -75% so the final Explore All button comes fully into view
-  const trackX = useTransform(scrollYProgress, [0.5, 0.9], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-75%"]);
+  // PAUSE from 0.4 to 0.45 so the "Featured Projects" text is completely visible before it moves!
+  // Scroll the track horizontally (0.45 to 0.9)
+  const trackX = useTransform(scrollYProgress, [0.45, 0.9], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-75%"]);
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-black h-[400vh] w-full">
+    <section ref={containerRef} className="relative z-30 bg-black h-[600vh] w-full">
       {/* Sticky container that stays pinned for the duration of the section */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
         

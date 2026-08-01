@@ -268,7 +268,7 @@ export default function VideoScrubber() {
             <h2 ref={text2Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
               Get Packing
             </h2>
-            <h2 ref={text3Ref} className="text-[#a5fe00] text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
+            <h2 ref={text3Ref} className="text-[#FACC15] text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
               Get Paid
             </h2>
           </div>

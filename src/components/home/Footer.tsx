@@ -83,7 +83,7 @@ function MagneticCTA({
       style={{ x: springX, y: springY, padding: '1.5rem 3.5rem', fontSize: '1.5rem' }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
-      className="group relative inline-flex items-center gap-3 bg-[#DC2626] text-white rounded-full font-black uppercase tracking-widest cursor-pointer transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(220,38,38,0.5)]"
+      className="group relative inline-flex items-center gap-3 bg-[#FACC15] text-black rounded-full font-black uppercase tracking-widest cursor-pointer transition-shadow duration-500 hover:shadow-[0_0_60px_rgba(250,204,21,0.5)]"
     >
       {children}
       <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -145,7 +145,7 @@ function BackToTop() {
   return (
     <motion.button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white cursor-pointer hover:bg-[#DC2626] hover:border-[#DC2626] transition-colors duration-300"
+      className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white cursor-pointer hover:bg-[#FACC15] hover:border-[#FACC15] hover:text-black transition-colors duration-300"
       initial={{ opacity: 0, y: 20 }}
       animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
@@ -284,7 +284,7 @@ export default function Footer() {
           </motion.span>
 
           {/* Radial glow */}
-          <div className="absolute w-[600px] h-[600px] rounded-full bg-[#DC2626]/10 blur-[120px] pointer-events-none" />
+          <div className="absolute w-[600px] h-[600px] rounded-full bg-[#FACC15]/10 blur-[120px] pointer-events-none" />
 
           <h2 className="relative text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[0.95] max-w-4xl mb-6">
             <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2">
@@ -294,7 +294,7 @@ export default function Footer() {
               <WordReveal inView={ctaInView} delay={0.15}>For</WordReveal>
               <WordReveal inView={ctaInView} delay={0.2}>A</WordReveal>
             </div>
-            <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2 text-[#DC2626] mt-2 md:mt-4">
+            <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2 text-[#FACC15] mt-2 md:mt-4">
               <WordReveal inView={ctaInView} delay={0.25}>Free</WordReveal>
               <WordReveal inView={ctaInView} delay={0.3}>Site</WordReveal>
               <WordReveal inView={ctaInView} delay={0.35}>Visit</WordReveal>
@@ -358,7 +358,7 @@ export default function Footer() {
             {/* Col 1 — Brand */}
             <RevealGroup className="flex flex-col items-center text-center gap-5 w-full md:w-80">
               <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight">
-                S.A. <span className="text-[#DC2626]">Traders</span>
+                S.A. <span className="text-[#FACC15]">Traders</span>
               </h3>
               <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest">
                 Office Dismantling
@@ -372,7 +372,7 @@ export default function Footer() {
                 <a
                   href="tel:+919164941338"
                   aria-label="Call S.A. Traders"
-                  className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-white/40 cursor-pointer transition-all duration-300 hover:border-[#DC2626] hover:bg-[#DC2626]/10 hover:text-[#DC2626]"
+                  className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-white/40 cursor-pointer transition-all duration-300 hover:border-[#FACC15] hover:bg-[#FACC15]/10 hover:text-[#FACC15]"
                 >
                   <Phone className="w-4 h-4" />
                 </a>
@@ -411,7 +411,7 @@ export default function Footer() {
                     className="group relative text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
                   >
                     {link.label}
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[#DC2626] transition-all duration-300 group-hover:w-full" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>
@@ -452,7 +452,7 @@ export default function Footer() {
                 href="tel:+919164941338"
                 className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <Phone className="w-5 h-5 text-[#DC2626] shrink-0" />
+                <Phone className="w-5 h-5 text-[#FACC15] shrink-0" />
                 <span>+91 91649 41338</span>
               </a>
 
@@ -460,7 +460,7 @@ export default function Footer() {
                 href="mailto:satraders78611@gmail.com"
                 className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <Mail className="w-5 h-5 text-[#DC2626] shrink-0" />
+                <Mail className="w-5 h-5 text-[#FACC15] shrink-0" />
                 <span>satraders78611@gmail.com</span>
               </a>
 
@@ -470,7 +470,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="group flex flex-col items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer"
               >
-                <MapPin className="w-5 h-5 text-[#DC2626] shrink-0" />
+                <MapPin className="w-5 h-5 text-[#FACC15] shrink-0" />
                 <span>
                   Bengaluru, Karnataka
                   <br />

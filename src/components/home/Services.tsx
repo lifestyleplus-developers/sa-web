@@ -96,7 +96,7 @@ export default function Services() {
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center h-full relative z-10">
         <div className="mb-8 md:mb-12 flex flex-col items-center text-center gap-2">
           <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">
-            Services <span className="text-red-600">Provided</span>
+            Services <span className="text-[#FACC15]">Provided</span>
           </h2>
           <p className="text-white/60 text-base md:text-lg max-w-2xl">
             We buy used equipment and scrap. We do not sell. Discover our comprehensive range of commercial dismantling and buyback services.
