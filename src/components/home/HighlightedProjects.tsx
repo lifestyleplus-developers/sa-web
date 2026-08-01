@@ -4,9 +4,6 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import Image from "next/image";
-import { Manrope } from "next/font/google";
-
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export default function HighlightedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,22 +26,18 @@ export default function HighlightedProjects() {
   // Fade in the horizontal track (0.35 to 0.4)
   const trackOpacity = useTransform(scrollYProgress, [0.35, 0.4], shouldReduceMotion ? [1, 1] : [0, 1]);
   
+  // Fade the background to black after the zoom finishes to give the user the solid black aesthetic they prefer behind the cards
+  const bgBlackOpacity = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
+
   // To absolutely guarantee Safari doesn't crash on the massive multiply layer, we completely hide it after the zoom finishes!
   const multiplyDisplay = useTransform(scrollYProgress, (p) => p > 0.4 ? "none" : "flex");
 
   // PAUSE from 0.4 to 0.45 so the "Featured Projects" text is completely visible before it moves!
-  // Scroll the track horizontally using a dynamic calculation so it perfectly aligns the final button on ALL screen sizes.
-  // We animate all the way to 1.0 so there is no "dead zone" where the user is scrolling but nothing is moving!
-  const trackX = useTransform(scrollYProgress, (p) => {
-    if (shouldReduceMotion) return "0%";
-    // Map scroll progress (0.45 to 1.0) to a 0-1 multiplier
-    const progress = (p - 0.45) / (1.0 - 0.45);
-    const clamped = Math.max(0, Math.min(1, progress));
-    return `calc(-${clamped * 100}% + ${clamped * 85}vw)`;
-  });
+  // Scroll the track horizontally using a direct percentage to guarantee standard right-to-left flow regardless of screen width
+  const trackX = useTransform(scrollYProgress, [0.45, 1.0], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-85%"]);
 
   return (
-    <section ref={containerRef} className={`relative z-30 bg-black h-[800vh] w-full ${manrope.className}`}>
+    <section ref={containerRef} className="relative z-30 bg-black h-[800vh] w-full">
       {/* Sticky container that stays pinned for the duration of the section */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
         
@@ -58,6 +51,12 @@ export default function HighlightedProjects() {
             className="object-cover"
           />
         </div>
+
+        {/* Fade to Black transition overlay */}
+        <motion.div 
+          className="absolute inset-0 w-full h-full z-[5] bg-black pointer-events-none"
+          style={{ opacity: bgBlackOpacity }}
+        />
 
         {/* 
           The Multiply Overlay 

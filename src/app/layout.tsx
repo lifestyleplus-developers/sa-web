@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/JsonLd";
 import SmoothScrolling from "@/components/SmoothScrolling";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -84,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} dark`}>
+    <html lang="en" className={`${manrope.variable} dark`}>
       <body suppressHydrationWarning>
         <JsonLd />
         <SmoothScrolling>{children}</SmoothScrolling>
