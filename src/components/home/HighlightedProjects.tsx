@@ -26,12 +26,6 @@ export default function HighlightedProjects() {
   // Fade in the horizontal track (0.35 to 0.4)
   const trackOpacity = useTransform(scrollYProgress, [0.35, 0.4], shouldReduceMotion ? [1, 1] : [0, 1]);
   
-  // Fade the background to black after the zoom finishes to give the user the solid black aesthetic they prefer behind the cards
-  const bgBlackOpacity = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
-
-  // To absolutely guarantee Safari doesn't crash on the massive multiply layer, we completely hide it after the zoom finishes!
-  const multiplyDisplay = useTransform(scrollYProgress, (p) => p > 0.4 ? "none" : "flex");
-
   // PAUSE from 0.4 to 0.45 so the "Featured Projects" text is completely visible before it moves!
   // Scroll the track horizontally using a direct percentage to guarantee standard right-to-left flow regardless of screen width
   const trackX = useTransform(scrollYProgress, [0.45, 1.0], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-85%"]);
@@ -41,31 +35,12 @@ export default function HighlightedProjects() {
       {/* Sticky container that stays pinned for the duration of the section */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
         
-        {/* Background Image that we reveal */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Image
-            src="/images/highlighted-project.png"
-            alt="Highlighted Project"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-
-        {/* Fade to Black transition overlay */}
-        <motion.div 
-          className="absolute inset-0 w-full h-full z-[5] bg-black pointer-events-none"
-          style={{ opacity: bgBlackOpacity }}
-        />
-
         {/* 
-          The Multiply Overlay 
-          NOTE: We do NOT fade opacity to 0 here to prevent Safari mix-blend compositing bugs.
-          The scale to 500 naturally pushes all black edges off-screen forever.
+          The Fly-Through Text
+          Zooms up massively. The hole in the "O" eventually surrounds the entire screen, leaving a pure black background for the project cards.
         */}
         <motion.div 
-          className="absolute inset-0 w-full h-full flex justify-center items-center z-10 pointer-events-none bg-black mix-blend-multiply"
-          style={{ display: multiplyDisplay }}
+          className="absolute inset-0 w-full h-full flex justify-center items-center z-10 pointer-events-none"
         >
           <motion.div 
             style={{ 
