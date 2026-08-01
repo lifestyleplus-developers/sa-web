@@ -98,7 +98,7 @@ function MagneticCTA({
 
 function InfiniteMarquee() {
   const shouldReduceMotion = useReducedMotion();
-  const marqueeText = services.join(" • ") + " • ";
+  const marqueeText = services.map((s) => s.label).join(" • ") + " • ";
 
   return (
     <div className="relative w-full overflow-hidden py-8 border-y border-white/10">
@@ -237,12 +237,12 @@ export default function Footer() {
       <footer
         ref={containerRef}
         id="footer"
-        className="relative z-30 bg-black text-white overflow-hidden"
+        className="relative z-30 bg-black text-white overflow-hidden w-full"
       >
         {/* ─────────── Giant CTA Banner ─────────── */}
         <section
           ref={ctaRef}
-          className="relative flex flex-col items-center justify-center text-center px-6 py-32 md:py-44 overflow-hidden"
+          className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 py-16 overflow-hidden"
         >
           {/* Parallax background word */}
           <motion.span
@@ -327,14 +327,14 @@ export default function Footer() {
         <InfiniteMarquee />
 
         {/* ─────────── Footer Grid ─────────── */}
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12">
+        <div className="w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-28">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:justify-items-center">
             {/* Col 1 — Brand */}
-            <RevealGroup className="flex flex-col gap-6 lg:col-span-1">
+            <RevealGroup className="flex flex-col gap-5 lg:col-span-1 w-fit">
               <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight">
                 S.A. <span className="text-[#DC2626]">Traders</span>
               </h3>
-              <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest -mt-2">
+              <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest">
                 Office Dismantling
               </p>
               <p className="text-white/40 text-sm leading-relaxed max-w-xs">
@@ -371,50 +371,54 @@ export default function Footer() {
 
             {/* Col 2 — Quick Links */}
             <RevealGroup
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-6 w-fit"
               staggerDelay={0.06}
             >
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30 mb-2">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
                 Quick Links
               </h4>
-              {quickLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
-                >
-                  <span className="w-0 h-px bg-[#DC2626] transition-all duration-300 group-hover:w-4 shrink-0" />
-                  {link.label}
-                </Link>
-              ))}
+              <div className="flex flex-col gap-4">
+                {quickLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
+                  >
+                    <span className="w-0 h-px bg-[#DC2626] transition-all duration-300 group-hover:w-4 shrink-0" />
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </RevealGroup>
 
             {/* Col 3 — Services */}
             <RevealGroup
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-6 w-fit"
               staggerDelay={0.05}
             >
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30 mb-2">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
                 Services
               </h4>
-              {services.slice(0, 6).map((s) => (
-                <Link
-                  key={s.label}
-                  href={s.href}
-                  className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
-                >
-                  <span className="w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-4 shrink-0" />
-                  {s.label}
-                </Link>
-              ))}
+              <div className="flex flex-col gap-4">
+                {services.slice(0, 6).map((s) => (
+                  <Link
+                    key={s.label}
+                    href={s.href}
+                    className="group inline-flex items-center gap-2 text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
+                  >
+                    <span className="w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-4 shrink-0" />
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
             </RevealGroup>
 
             {/* Col 4 — Contact */}
             <RevealGroup
-              className="flex flex-col gap-5"
+              className="flex flex-col gap-6 w-fit"
               staggerDelay={0.1}
             >
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30 mb-2">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/30 mb-3">
                 Get in Touch
               </h4>
 
@@ -453,7 +457,7 @@ export default function Footer() {
 
         {/* ─────────── Bottom Bar ─────────── */}
         <div className="border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-white/30 text-xs">
+          <div className="w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-20 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-white/30 text-xs">
             <p>
               &copy; {year} S.A. Traders Office Dismantling. All rights reserved.
             </p>
