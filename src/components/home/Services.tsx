@@ -91,7 +91,7 @@ export default function Services() {
   return (
     <section 
       ref={containerRef}
-      className="sticky top-0 z-10 bg-black min-h-screen w-full flex flex-col justify-center items-center overflow-hidden px-4 md:px-12 pt-32 pb-24"
+      className="relative md:sticky md:top-0 z-10 bg-black min-h-screen w-full flex flex-col justify-center items-center px-4 md:px-12 pt-32 pb-24"
     >
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center h-full relative z-10">
         <div className="mb-8 md:mb-12 flex flex-col items-center text-center gap-2">
@@ -103,7 +103,7 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-h-[70vh] overflow-visible">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
           {services.map((service, index) => (
             <motion.div 
               key={index} 

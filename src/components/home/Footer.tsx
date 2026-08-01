@@ -288,7 +288,7 @@ export default function Footer() {
           </motion.span>
 
           {/* Radial glow */}
-          <div className="absolute w-[600px] h-[600px] rounded-full bg-[#FACC15]/10 blur-[120px] pointer-events-none" />
+          {/* <div className="absolute w-[600px] h-[600px] rounded-full bg-[#FACC15]/10 blur-[120px] pointer-events-none" /> */}
 
           <h2 className="relative text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-[0.95] max-w-4xl mb-6">
             <div className="flex flex-wrap justify-center gap-x-[0.25em] gap-y-2">
