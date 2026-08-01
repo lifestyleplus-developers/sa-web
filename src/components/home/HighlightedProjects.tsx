@@ -4,33 +4,47 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import Image from "next/image";
+import { Manrope } from "next/font/google";
+
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export default function HighlightedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Increased to 600vh to slow down the scroll and give plenty of room for animations
+  // Increased to 800vh to ensure a very slow, deliberate scroll experience on mobile so users don't accidentally blast past the section into the footer
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
   // Fly-through text scaling (completes by 0.35)
+  // Capped at 80 to prevent iOS Safari GPU compositing crashes (rendering as solid black)
   const textScale = useTransform(
     scrollYProgress,
     [0, 0.1, 0.2, 0.35],
-    shouldReduceMotion ? [1, 1, 1, 1] : [1, 5, 20, 500]
+    shouldReduceMotion ? [1, 1, 1, 1] : [1, 5, 20, 80]
   );
   
   // Fade in the horizontal track (0.35 to 0.4)
   const trackOpacity = useTransform(scrollYProgress, [0.35, 0.4], shouldReduceMotion ? [1, 1] : [0, 1]);
   
+  // To absolutely guarantee Safari doesn't crash on the massive multiply layer, we completely hide it after the zoom finishes!
+  const multiplyDisplay = useTransform(scrollYProgress, (p) => p > 0.4 ? "none" : "flex");
+
   // PAUSE from 0.4 to 0.45 so the "Featured Projects" text is completely visible before it moves!
-  // Scroll the track horizontally (0.45 to 0.9)
-  const trackX = useTransform(scrollYProgress, [0.45, 0.9], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-75%"]);
+  // Scroll the track horizontally using a dynamic calculation so it perfectly aligns the final button on ALL screen sizes.
+  // We animate all the way to 1.0 so there is no "dead zone" where the user is scrolling but nothing is moving!
+  const trackX = useTransform(scrollYProgress, (p) => {
+    if (shouldReduceMotion) return "0%";
+    // Map scroll progress (0.45 to 1.0) to a 0-1 multiplier
+    const progress = (p - 0.45) / (1.0 - 0.45);
+    const clamped = Math.max(0, Math.min(1, progress));
+    return `calc(-${clamped * 100}% + ${clamped * 85}vw)`;
+  });
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-black h-[600vh] w-full">
+    <section ref={containerRef} className={`relative z-30 bg-black h-[800vh] w-full ${manrope.className}`}>
       {/* Sticky container that stays pinned for the duration of the section */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
         
@@ -52,6 +66,7 @@ export default function HighlightedProjects() {
         */}
         <motion.div 
           className="absolute inset-0 w-full h-full flex justify-center items-center z-10 pointer-events-none bg-black mix-blend-multiply"
+          style={{ display: multiplyDisplay }}
         >
           <motion.div 
             style={{ 
@@ -141,11 +156,11 @@ function ProjectCard({ title, area, type, desc, image }: { title: string, area: 
       
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0 transition-transform duration-700 ease-out group-hover:scale-110">
-        <Image src={image} alt={title} fill sizes="400px" className="object-cover opacity-80" />
+        <Image src={image} alt={title} fill sizes="400px" className="object-cover opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
       </div>
 
-      {/* Gradient Overlay for Text Readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
+      {/* Gradient Overlay for Text Readability - Lighter by default for mobile visibility! */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-100 transition-all duration-500 group-hover:via-black/70" />
 
       {/* Content Layer */}
       <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
