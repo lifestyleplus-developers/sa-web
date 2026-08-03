@@ -25,6 +25,7 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
   const text1Ref = useRef<HTMLHeadingElement>(null);
   const text2Ref = useRef<HTMLHeadingElement>(null);
   const text3Ref = useRef<HTMLHeadingElement>(null);
+  const introTextRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
@@ -32,7 +33,16 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
   const rafRef = useRef<number>(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [altWord, setAltWord] = useState("Office");
   const shouldReduceMotion = useReducedMotion();
+
+  // Alternate the text
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAltWord((prev) => (prev === "Office" ? "Warehouse" : "Office"));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Preload all frames
   useEffect(() => {
@@ -187,6 +197,14 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
       duration: 0.1,
     }, 0);
 
+    // Make intro text go up and disappear in the very first scroll
+    tl.to(introTextRef.current, {
+      y: "-150%",
+      opacity: 0,
+      duration: 0.05,
+      ease: "power2.inOut"
+    }, 0);
+
     // Dim the video starting at 70% to make text pop
     tl.to(canvasRef.current, { opacity: 0.4, duration: 0.1, ease: "power1.inOut" }, 0.7);
 
@@ -242,6 +260,27 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
             className="absolute inset-0 w-full h-full z-0 object-cover"
             style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s" }}
           />
+
+          {/* Intro Text overlay */}
+          <div
+            ref={introTextRef}
+            className="absolute z-40 bottom-8 left-6 md:bottom-auto md:top-10 md:left-10 text-white font-black uppercase tracking-tighter leading-[0.85] pointer-events-none mix-blend-difference"
+          >
+            <div className="flex flex-col text-left">
+              <div className="text-xl md:text-3xl text-[#FACC15] h-[1em] overflow-hidden relative mb-1">
+                <div
+                  className="flex flex-col transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateY(${altWord === "Office" ? "0%" : "-50%"})` }}
+                >
+                  <span className="h-[1em]">Office</span>
+                  <span className="h-[1em]">Warehouse</span>
+                </div>
+              </div>
+              <div className="text-4xl md:text-6xl">Demolition</div>
+              <div className="text-4xl md:text-6xl">Dismantling</div>
+              <div className="text-4xl md:text-6xl">Done.</div>
+            </div>
+          </div>
 
           {/* Cascading Texts overlay */}
           <div
