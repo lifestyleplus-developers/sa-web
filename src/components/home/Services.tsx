@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
 
-// GSAP removed
+type ServicesTransitionVariant = "first" | "second" | "third" | "kora";
 
 const services = [
   {
@@ -71,13 +72,95 @@ const services = [
   },
 ];
 
-export default function Services() {
+export default function Services({
+  transitionVariant = "kora",
+}: {
+  transitionVariant?: ServicesTransitionVariant;
+}) {
+  const sectionRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "start start"],
+  });
+  const transitionLineScale = useTransform(
+    scrollYProgress,
+    [0, 0.55, 1],
+    shouldReduceMotion ? [1, 1, 1] : [0, 1, 1]
+  );
+  const cutLineScale = useTransform(
+    scrollYProgress,
+    [0, 0.45, 0.78, 1],
+    shouldReduceMotion ? [1, 1, 1, 1] : [0, 1, 1, 0]
+  );
+  const cutLineOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.82, 1],
+    shouldReduceMotion ? [1, 1, 1, 1] : [0, 1, 1, 0]
+  );
+  const flatClipPath = "inset(0 0% 0 0% round 0px 0px 0px 0px)";
+  const revealClipPath = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.82, 1],
+    shouldReduceMotion
+      ? [flatClipPath, flatClipPath, flatClipPath, flatClipPath]
+      : [
+          "inset(0 48% 0 48% round 28px 28px 0px 0px)",
+          "inset(0 42% 0 42% round 28px 28px 0px 0px)",
+          "inset(0 4% 0 4% round 12px 12px 0px 0px)",
+          flatClipPath,
+        ]
+  );
+  const apertureLeft = useTransform(scrollYProgress, [0, 0.82, 1], ["48%", "4%", "0%"]);
+  const apertureRight = useTransform(scrollYProgress, [0, 0.82, 1], ["48%", "4%", "0%"]);
+  const apertureEdgeOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.82, 1],
+    shouldReduceMotion ? [0, 0, 0, 0] : [0, 1, 1, 0]
+  );
 
   return (
-    <section 
-      className="relative md:sticky md:top-0 z-10 bg-black min-h-screen w-full flex flex-col justify-center items-center px-4 md:px-12 pt-32 pb-24"
+    <motion.section
+      ref={sectionRef}
+      className={`relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black px-4 pb-24 pt-32 md:px-12 ${
+        transitionVariant === "first" ? "w-full rounded-t-[2rem] md:rounded-t-[3rem]" : ""
+      } ${
+        transitionVariant === "kora"
+          ? "w-full"
+          : "md:sticky md:top-0"
+      } ${transitionVariant === "second" || transitionVariant === "third" ? "w-full" : ""}`}
+      style={transitionVariant === "third" ? { clipPath: revealClipPath } : undefined}
+      data-transition={transitionVariant}
     >
+      {transitionVariant === "first" ? (
+        <motion.div
+          className="absolute left-1/2 top-0 z-30 h-1 w-2/3 origin-center -translate-x-1/2 bg-[#FACC15] md:w-1/2"
+          style={{ scaleX: transitionLineScale }}
+          aria-hidden="true"
+        />
+      ) : transitionVariant === "second" ? (
+        <motion.div
+          className="absolute left-1/2 top-0 z-30 h-24 w-0.5 origin-top -translate-x-1/2 bg-[#FACC15] shadow-[0_0_16px_rgba(250,204,21,0.55)]"
+          style={{ scaleY: cutLineScale, opacity: cutLineOpacity }}
+          aria-hidden="true"
+        >
+          <span className="absolute -bottom-1 -left-[3px] h-2 w-2 rotate-45 bg-[#FACC15]" />
+        </motion.div>
+      ) : transitionVariant === "third" ? (
+        <>
+          <motion.div
+            className="absolute inset-y-0 z-30 w-0.5 bg-[#FACC15] shadow-[0_0_14px_rgba(250,204,21,0.45)]"
+            style={{ left: apertureLeft, opacity: apertureEdgeOpacity }}
+            aria-hidden="true"
+          />
+          <motion.div
+            className="absolute inset-y-0 z-30 w-0.5 bg-[#FACC15] shadow-[0_0_14px_rgba(250,204,21,0.45)]"
+            style={{ right: apertureRight, opacity: apertureEdgeOpacity }}
+            aria-hidden="true"
+          />
+        </>
+      ) : null}
+
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center h-full relative z-10">
         <div className="h-20 md:hidden" aria-hidden="true" />
 
@@ -88,9 +171,32 @@ export default function Services() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">
-            Services <span className="text-[#FACC15]">Provided</span>
-          </h2>
+          {transitionVariant === "second" ? (
+            <h2 className="flex justify-center gap-x-2 overflow-hidden text-4xl font-black uppercase tracking-tighter md:text-5xl">
+              <motion.span
+                className="text-white"
+                initial={shouldReduceMotion ? false : { x: -36 }}
+                whileInView={shouldReduceMotion ? undefined : { x: 0 }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                Services
+              </motion.span>
+              <motion.span
+                className="text-[#FACC15]"
+                initial={shouldReduceMotion ? false : { x: 36 }}
+                whileInView={shouldReduceMotion ? undefined : { x: 0 }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                Provided
+              </motion.span>
+            </h2>
+          ) : (
+            <h2 className="text-4xl font-black uppercase tracking-tighter text-white md:text-5xl">
+              Services <span className="text-[#FACC15]">Provided</span>
+            </h2>
+          )}
           <p className="hidden max-w-2xl text-base text-white/60 md:block md:text-lg">
             We buy used equipment and scrap. We do not sell. Discover our comprehensive range of commercial dismantling and buyback services.
           </p>
@@ -121,6 +227,6 @@ export default function Services() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

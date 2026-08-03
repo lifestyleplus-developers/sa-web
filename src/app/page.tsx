@@ -14,11 +14,9 @@ export default function Home() {
   return (
     <main style={{ backgroundColor: "black" }}>
 
-      <VideoScrubber />
-
-      <div className="-mt-[100vh] relative z-20">
-        <Services />
-      </div>
+      <VideoScrubber>
+        <Services transitionVariant="kora" />
+      </VideoScrubber>
 
       <HighlightedProjects />
 

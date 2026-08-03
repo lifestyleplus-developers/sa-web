@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
@@ -17,14 +17,14 @@ function framePath(index: number): string {
   return `/frames/ezgif-frame-${padded}.png`;
 }
 
-export default function VideoScrubber() {
+export default function VideoScrubber({ children }: { children?: ReactNode }) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const heroViewportRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const text1Ref = useRef<HTMLHeadingElement>(null);
   const text2Ref = useRef<HTMLHeadingElement>(null);
   const text3Ref = useRef<HTMLHeadingElement>(null);
-  const textsContainerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
@@ -164,7 +164,7 @@ export default function VideoScrubber() {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "bottom bottom",
+        end: () => `+=${window.innerHeight * SCROLL_MULTIPLIER}`,
         scrub: true,
         onUpdate: (self) => {
           const progress = self.progress;
@@ -195,21 +195,8 @@ export default function VideoScrubber() {
     tl.fromTo(text2Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.75);
     tl.fromTo(text3Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.8);
 
-    // Zoom in and blur video (from 80% to 90%)
-    tl.to(canvasRef.current, {
-      scale: 3,
-      filter: "blur(12px)",
-      duration: 0.1,
-      ease: "power2.inOut"
-    }, 0.8);
-
-    // Push texts up (from 90% to 100%) synchronizing with the overlapping Services section
-    tl.to(textsContainerRef.current, {
-      y: "-100vh",
-      opacity: 0,
-      duration: 0.1,
-      ease: "none"
-    }, 0.9);
+    // Kora: both the final frame and completed text stack remain fixed while
+    // the Services section travels over them during the final viewport.
 
     return () => {
       window.clearTimeout(refreshTimeout);
@@ -219,13 +206,12 @@ export default function VideoScrubber() {
   }, [loaded, shouldReduceMotion]);
 
   return (
-    <div>
-      <div
-        ref={sectionRef}
-        className="relative w-full"
-        style={{ height: `${(SCROLL_MULTIPLIER + 1) * 100}vh`, backgroundColor: "white" }}
-      >
-        <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden" style={{ backgroundColor: "white" }}>
+    <section ref={sectionRef} className="relative w-full bg-white">
+        <div
+          ref={heroViewportRef}
+          className="sticky top-0 z-0 flex h-screen w-full items-center justify-center overflow-hidden"
+          style={{ backgroundColor: "white" }}
+        >
           <div 
             ref={cardRef} 
           className="w-[92vw] h-[92vh] md:w-[96vw] md:h-[94vh] rounded-[32px] md:rounded-[40px] relative overflow-hidden bg-black flex flex-col justify-between"
@@ -258,8 +244,7 @@ export default function VideoScrubber() {
           />
 
           {/* Cascading Texts overlay */}
-          <div 
-            ref={textsContainerRef}
+          <div
             className={`absolute inset-0 z-20 flex flex-col justify-end items-center pb-24 md:pb-32 pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
           >
             <h2 ref={text1Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
@@ -272,9 +257,16 @@ export default function VideoScrubber() {
               Get Paid
             </h2>
           </div>
+          </div>
         </div>
-      </div>
-    </div>
-    </div>
+
+        <div
+          className="relative z-0"
+          style={{ height: shouldReduceMotion ? 0 : `${SCROLL_MULTIPLIER * 100}vh` }}
+          aria-hidden="true"
+        />
+
+        {children ? <div className="relative z-20 bg-black">{children}</div> : null}
+    </section>
   );
 }
