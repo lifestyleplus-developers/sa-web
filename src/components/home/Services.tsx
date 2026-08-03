@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
+import ScrollFloat from "@/components/ReactBits/ScrollFloat";
 
 type ServicesTransitionVariant = "first" | "second" | "third" | "kora";
 
@@ -173,24 +174,28 @@ export default function Services({
         >
           {transitionVariant === "second" ? (
             <h2 className="flex justify-center gap-x-2 overflow-hidden text-4xl font-black uppercase tracking-tighter md:text-5xl">
-              <motion.span
-                className="text-white"
-                initial={shouldReduceMotion ? false : { x: -36 }}
-                whileInView={shouldReduceMotion ? undefined : { x: 0 }}
-                viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              <ScrollFloat
+                animationDuration={1}
+                ease="back.inOut(2)"
+                scrollStart="center bottom+=50%"
+                scrollEnd="bottom bottom-=40%"
+                stagger={0.03}
+                containerClassName="inline-block"
+                textClassName="text-white"
               >
                 Services
-              </motion.span>
-              <motion.span
-                className="text-[#FACC15]"
-                initial={shouldReduceMotion ? false : { x: 36 }}
-                whileInView={shouldReduceMotion ? undefined : { x: 0 }}
-                viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              </ScrollFloat>
+              <ScrollFloat
+                animationDuration={1}
+                ease="back.inOut(2)"
+                scrollStart="center bottom+=50%"
+                scrollEnd="bottom bottom-=40%"
+                stagger={0.03}
+                containerClassName="inline-block"
+                textClassName="text-[#FACC15]"
               >
                 Provided
-              </motion.span>
+              </ScrollFloat>
             </h2>
           ) : (
             <h2 className="text-4xl font-black uppercase tracking-tighter text-white md:text-5xl">
