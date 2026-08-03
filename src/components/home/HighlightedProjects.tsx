@@ -5,11 +5,35 @@ import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
 import Link from "next/link";
 import Image from "next/image";
 
+const projects = [
+  {
+    title: "Manyata Tech Park",
+    area: "1,20,000 Sq. Ft.",
+    type: "Complete Office Dismantling",
+    desc: "Full strip-out and clearance of corporate IT workspace infrastructure, including workstations and partitions.",
+    image: "/images/highlighted-project.png",
+  },
+  {
+    title: "Brigade Gateway",
+    area: "85,000 Sq. Ft.",
+    type: "IT Infrastructure Clearance",
+    desc: "Safe removal and buyback of massive server rooms, UPS systems, and heavy AC equipment.",
+    image: "/images/highlighted-project.png",
+  },
+  {
+    title: "Electronic City Park",
+    area: "50,000 Sq. Ft.",
+    type: "Commercial Site Cleanup",
+    desc: "Complete clearance of industrial heavy machinery, electrical panels, and metal scrap.",
+    image: "/images/highlighted-project.png",
+  },
+];
+
 export default function HighlightedProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Increased to 800vh to ensure a very slow, deliberate scroll experience on mobile so users don't accidentally blast past the section into the footer
+  // The long scroll range is used only by the desktop cinematic sequence.
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -31,9 +55,58 @@ export default function HighlightedProjects() {
   const trackX = useTransform(scrollYProgress, [0.45, 1.0], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-85%"]);
 
   return (
-    <section ref={containerRef} className="relative z-30 bg-black h-[800vh] w-full">
+    <section ref={containerRef} className="relative z-30 w-full bg-black md:h-[800vh]">
+      {/* Mobile uses regular document flow. This avoids Safari dropping the composited
+          sticky layer to black while the second card enters the viewport. */}
+      <div className="px-5 pb-20 pt-20 md:hidden">
+        <div className="h-20" aria-hidden="true" />
+        <motion.div
+          className="text-center"
+          style={{ marginBottom: "64px" }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
+          <h2 className="text-5xl font-black leading-[0.9] tracking-tighter text-white uppercase">
+            Featured <span className="text-[#FACC15]">Projects</span>
+          </h2>
+        </motion.div>
+
+        <div className="flex flex-col items-center gap-10">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.title}
+              className="flex w-full justify-center"
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 32, scale: 0.98 }}
+              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: index === 0 ? 0.05 : 0, ease: "easeOut" }}
+            >
+              <ProjectCard {...project} mobile />
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          className="flex justify-center"
+          style={{ marginTop: "56px" }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.8 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <Link
+            href="/projects"
+            className="inline-flex min-h-14 w-80 items-center justify-center rounded-full bg-[#FACC15] px-6 text-center text-sm font-black uppercase tracking-widest text-black transition-transform duration-300 active:scale-[0.98]"
+          >
+            Explore all projects
+          </Link>
+        </motion.div>
+      </div>
+
       {/* Sticky container that stays pinned for the duration of the section */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden will-change-transform">
+      <div className="sticky top-0 hidden h-screen w-full flex-col items-center justify-center overflow-hidden will-change-transform md:flex">
         
         {/* 
           The Fly-Through Text
@@ -87,31 +160,13 @@ export default function HighlightedProjects() {
             </div>
 
             {/* High-Contrast Card 1 (From Requirements) */}
-            <ProjectCard 
-              title="Manyata Tech Park"
-              area="1,20,000 Sq. Ft."
-              type="Complete Office Dismantling"
-              desc="Full strip-out and clearance of corporate IT workspace infrastructure, including workstations and partitions."
-              image="/images/highlighted-project.png"
-            />
+            <ProjectCard {...projects[0]} />
 
             {/* High-Contrast Card 2 (Placeholder) */}
-            <ProjectCard 
-              title="Brigade Gateway"
-              area="85,000 Sq. Ft."
-              type="IT Infrastructure Clearance"
-              desc="Safe removal and buyback of massive server rooms, UPS systems, and heavy AC equipment."
-              image="/images/highlighted-project.png"
-            />
+            <ProjectCard {...projects[1]} />
 
             {/* High-Contrast Card 3 (Placeholder) */}
-            <ProjectCard 
-              title="Electronic City Park"
-              area="50,000 Sq. Ft."
-              type="Commercial Site Cleanup"
-              desc="Complete clearance of industrial heavy machinery, electrical panels, and metal scrap."
-              image="/images/highlighted-project.png"
-            />
+            <ProjectCard {...projects[2]} />
 
             {/* CTA Block */}
             <div className="flex flex-col items-center justify-center w-[350px] h-[500px] ml-12 shrink-0">
@@ -135,9 +190,9 @@ export default function HighlightedProjects() {
 }
 
 // Subcomponent for the premium cinematic project cards
-function ProjectCard({ title, area, type, desc, image }: { title: string, area: string, type: string, desc: string, image: string }) {
+function ProjectCard({ title, area, type, desc, image, mobile = false }: { title: string, area: string, type: string, desc: string, image: string, mobile?: boolean }) {
   return (
-    <div className="w-[400px] h-[550px] shrink-0 relative overflow-hidden rounded-2xl border border-white/10 group cursor-pointer bg-[#0a0a0a]">
+    <div className={`relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] ${mobile ? "mx-auto h-[400px] w-full max-w-[340px]" : "h-[550px] w-[400px] shrink-0"} group`}>
       
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0 transition-transform duration-700 ease-out group-hover:scale-110">
