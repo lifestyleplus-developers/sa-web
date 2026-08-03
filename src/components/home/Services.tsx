@@ -115,7 +115,6 @@ export default function Services() {
                 badgeVariant={service.variant}
                 imageSrc={service.image}
                 imageAlt={service.title}
-                href="#"
                 className="bg-black"
               />
             </motion.div>
