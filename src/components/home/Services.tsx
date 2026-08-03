@@ -1,19 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
-import { 
-  Building2, 
-  Factory, 
-  Monitor, 
-  BatteryCharging, 
-  ChefHat, 
-  Snowflake, 
-  ArrowUpDown, 
-  Zap, 
-  Tractor 
-} from "lucide-react";
 
 // GSAP removed
 
@@ -84,35 +72,41 @@ const services = [
 ];
 
 export default function Services() {
-  const containerRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const isServicesInView = useInView(containerRef, { amount: 0.2, once: true });
 
   return (
     <section 
-      ref={containerRef}
       className="relative md:sticky md:top-0 z-10 bg-black min-h-screen w-full flex flex-col justify-center items-center px-4 md:px-12 pt-32 pb-24"
     >
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center h-full relative z-10">
-        <div className="mb-8 md:mb-12 flex flex-col items-center text-center gap-2">
+        <div className="h-20 md:hidden" aria-hidden="true" />
+
+        <motion.div
+          className="flex flex-col items-center gap-2 text-center md:mb-12"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
           <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">
             Services <span className="text-[#FACC15]">Provided</span>
           </h2>
-          <p className="text-white/60 text-base md:text-lg max-w-2xl">
+          <p className="hidden max-w-2xl text-base text-white/60 md:block md:text-lg">
             We buy used equipment and scrap. We do not sell. Discover our comprehensive range of commercial dismantling and buyback services.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
-          {services.map((service, index) => (
+        <div className="h-16 md:hidden" aria-hidden="true" />
+
+        <div className="grid w-full grid-cols-1 justify-items-center gap-10 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {services.map((service) => (
             <motion.div 
-              key={index} 
-              className="service-card w-full"
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 70 }}
-              animate={shouldReduceMotion || isServicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 70 }}
-              transition={shouldReduceMotion
-                ? { duration: 0 }
-                : { duration: 0.45, delay: index * 0.08, ease: [0.21, 0.47, 0.32, 0.98] }}
+              key={service.title}
+              className="service-card w-80 max-w-full md:w-full"
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 32, scale: 0.98 }}
+              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.5, ease: "easeOut" }}
             >
               <TiltCard
                 title={service.title}
