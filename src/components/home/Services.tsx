@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
-import ScrollFloat from "@/components/ReactBits/ScrollFloat";
 
 type ServicesTransitionVariant = "first" | "second" | "third" | "kora";
 
@@ -167,41 +166,55 @@ export default function Services({
 
         <motion.div
           className="flex flex-col items-center gap-2 text-center md:mb-12"
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          initial={shouldReduceMotion ? "visible" : "hidden"}
+          whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
+          variants={{
+            hidden: { opacity: 0, y: 24 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.55,
+                ease: "circInOut",
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+              }
+            }
+          }}
         >
-          {transitionVariant === "second" ? (
-            <h2 className="flex justify-center gap-x-2 overflow-hidden text-4xl font-black uppercase tracking-tighter md:text-5xl">
-              <ScrollFloat
-                animationDuration={1}
-                ease="back.inOut(2)"
-                scrollStart="center bottom+=50%"
-                scrollEnd="bottom bottom-=40%"
-                stagger={0.03}
-                containerClassName="inline-block"
-                textClassName="text-white"
+          <h2 className="flex justify-center gap-x-2 text-4xl font-black uppercase tracking-tighter md:text-5xl">
+            <span className="overflow-hidden inline-flex pb-1">
+              <motion.span
+                className="text-white inline-block origin-bottom"
+                variants={{
+                  hidden: { y: "100%", rotate: 2 },
+                  visible: { 
+                    y: 0, 
+                    rotate: 0,
+                    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                  }
+                }}
               >
                 Services
-              </ScrollFloat>
-              <ScrollFloat
-                animationDuration={1}
-                ease="back.inOut(2)"
-                scrollStart="center bottom+=50%"
-                scrollEnd="bottom bottom-=40%"
-                stagger={0.03}
-                containerClassName="inline-block"
-                textClassName="text-[#FACC15]"
+              </motion.span>
+            </span>
+            <span className="overflow-hidden inline-flex pb-1">
+              <motion.span
+                className="text-[#FACC15] inline-block origin-bottom"
+                variants={{
+                  hidden: { y: "100%", rotate: 2 },
+                  visible: { 
+                    y: 0, 
+                    rotate: 0,
+                    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                  }
+                }}
               >
                 Provided
-              </ScrollFloat>
-            </h2>
-          ) : (
-            <h2 className="text-4xl font-black uppercase tracking-tighter text-white md:text-5xl">
-              Services <span className="text-[#FACC15]">Provided</span>
-            </h2>
-          )}
+              </motion.span>
+            </span>
+          </h2>
           <p className="hidden max-w-2xl text-base text-white/60 md:block md:text-lg">
             We buy used equipment and scrap. We do not sell. Discover our comprehensive range of commercial dismantling and buyback services.
           </p>
