@@ -19,6 +19,7 @@ import {
   ArrowUpRight,
   ChevronUp,
 } from "lucide-react";
+import DotGrid from "@/components/ReactBits/DotGrid";
 
 /* ───────────────────────── DATA ───────────────────────── */
 
@@ -287,40 +288,19 @@ export default function Footer() {
         className="relative z-30 bg-black text-white overflow-hidden w-full -mt-[1px]"
       >
         {/* Animated Subtle Dot Grid Background */}
-        <motion.div 
-          className="absolute inset-0 z-0 pointer-events-none opacity-20"
-          style={{
-            backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.3) 1px, transparent 1px)',
-            backgroundSize: '24px 24px'
-          }} 
-          animate={
-            shouldReduceMotion ? {} : { backgroundPosition: ["0px 0px", "24px 24px"] }
-          }
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-
-        {/* Interactive Cursor Spotlight over the Dot Grid */}
-        <motion.div 
-          className="absolute inset-0 z-0 pointer-events-none opacity-80"
-          style={{
-            backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.8) 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-            WebkitMaskImage: useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, black, transparent)`,
-            maskImage: useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, black, transparent)`
-          }} 
-          animate={
-            shouldReduceMotion ? {} : { backgroundPosition: ["0px 0px", "24px 24px"] }
-          }
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <DotGrid
+            dotSize={2}
+            gap={24}
+            baseColor="#444444"
+            activeColor="#FACC15"
+            proximity={120}
+            shockRadius={250}
+            shockStrength={5}
+            resistance={750}
+            returnDuration={1.5}
+          />
+        </div>
         
         {/* ─────────── Giant CTA Banner ─────────── */}
         <section
