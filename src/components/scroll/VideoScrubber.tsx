@@ -267,13 +267,13 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
             className="absolute z-40 bottom-8 left-6 md:bottom-auto md:top-10 md:left-10 text-white font-black uppercase tracking-tighter leading-[0.85] pointer-events-none mix-blend-difference"
           >
             <div className="flex flex-col text-left">
-              <div className="text-xl md:text-3xl text-[#FACC15] h-[1em] overflow-hidden relative mb-1">
+              <div className="text-xl md:text-3xl text-[#FACC15] h-[0.85em] overflow-hidden relative mb-1">
                 <div
                   className="flex flex-col transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateY(${altWord === "Office" ? "0%" : "-50%"})` }}
                 >
-                  <span className="h-[1em]">Office</span>
-                  <span className="h-[1em]">Warehouse</span>
+                  <span className="h-[0.85em] block leading-[0.85]">Office</span>
+                  <span className="h-[0.85em] block leading-[0.85]">Warehouse</span>
                 </div>
               </div>
               <div className="text-4xl md:text-6xl">Demolition</div>
