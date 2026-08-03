@@ -223,13 +223,6 @@ function ProjectCard({ title, area, type, desc, image, mobile = false }: { title
               <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Total Scale</span>
               <span className="block text-xl font-black text-white">{area}</span>
             </div>
-            <div className="ml-auto">
-              <div className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#FACC15] group-hover:border-[#FACC15] group-hover:text-black">
-                <svg className="w-5 h-5 -rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </div>
           </div>
 
         </div>

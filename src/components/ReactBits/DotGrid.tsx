@@ -276,7 +276,14 @@ const DotGrid = ({
 
   return (
     <section className={`dot-grid ${className}`} style={style}>
-      <div ref={wrapperRef} className="dot-grid__wrap">
+      <div 
+        ref={wrapperRef} 
+        className="dot-grid__wrap"
+        style={{
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 50%, black 100%)',
+          maskImage: 'linear-gradient(to bottom, transparent 0%, black 50%, black 100%)'
+        }}
+      >
         <canvas ref={canvasRef} className="dot-grid__canvas" />
       </div>
     </section>
