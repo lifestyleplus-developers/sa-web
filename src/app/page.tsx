@@ -12,7 +12,7 @@ const VideoScrubber = dynamic(
 
 export default function Home() {
   return (
-    <main style={{ backgroundColor: "white" }}>
+    <main style={{ backgroundColor: "black" }}>
 
       <VideoScrubber />
 

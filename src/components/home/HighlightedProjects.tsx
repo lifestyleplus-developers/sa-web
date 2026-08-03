@@ -33,22 +33,33 @@ export default function HighlightedProjects() {
   return (
     <section ref={containerRef} className="relative z-30 bg-black h-[800vh] w-full">
       {/* Sticky container that stays pinned for the duration of the section */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden will-change-transform">
         
         {/* 
           The Fly-Through Text
           Zooms up massively. The hole in the "O" eventually surrounds the entire screen, leaving a pure black background for the project cards.
         */}
         <motion.div 
-          className="absolute inset-0 w-full h-full flex justify-center items-center z-10 pointer-events-none"
+          className="absolute inset-0 w-full h-full flex justify-center items-center z-10 pointer-events-none will-change-transform"
         >
           <motion.div 
             style={{ 
               scale: textScale, 
               // 31.5% horizontal perfectly targets the exact center of the letter "O" in "PROJECTS"
               transformOrigin: "31.5% 50%",
+              backgroundImage: "url('/images/highlighted-project.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              color: "transparent",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden",
+              transform: "translateZ(0)",
+              WebkitTransform: "translateZ(0)"
             }}
-            className="text-[18vw] font-black uppercase tracking-tighter leading-none text-white whitespace-nowrap"
+            className="text-[18vw] font-black uppercase tracking-tighter leading-none whitespace-nowrap"
           >
             PROJECTS
           </motion.div>
@@ -60,7 +71,7 @@ export default function HighlightedProjects() {
           style={{ opacity: trackOpacity }}
         >
           <motion.div 
-            className="flex gap-8 items-center h-full w-max"
+            className="flex gap-8 items-center h-full w-max will-change-transform"
             style={{ x: trackX }}
           >
             

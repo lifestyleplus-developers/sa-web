@@ -9,6 +9,7 @@ import {
   useInView,
   useSpring,
   useMotionValue,
+  useMotionTemplate,
 } from "motion/react";
 import Link from "next/link";
 import {
@@ -267,13 +268,60 @@ export default function Footer() {
 
   const year = new Date().getFullYear();
 
+  /* Spotlight Mouse Tracking for Dot Grid */
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const { left, top } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
+  }, [mouseX, mouseY]);
+
   return (
     <>
       <footer
         ref={containerRef}
         id="footer"
-        className="relative z-30 bg-black text-white overflow-hidden w-full"
+        onMouseMove={handleMouseMove}
+        className="relative z-30 bg-black text-white overflow-hidden w-full -mt-[1px]"
       >
+        {/* Animated Subtle Dot Grid Background */}
+        <motion.div 
+          className="absolute inset-0 z-0 pointer-events-none opacity-20"
+          style={{
+            backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.3) 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }} 
+          animate={
+            shouldReduceMotion ? {} : { backgroundPosition: ["0px 0px", "24px 24px"] }
+          }
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+
+        {/* Interactive Cursor Spotlight over the Dot Grid */}
+        <motion.div 
+          className="absolute inset-0 z-0 pointer-events-none opacity-80"
+          style={{
+            backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.8) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+            WebkitMaskImage: useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, black, transparent)`,
+            maskImage: useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, black, transparent)`
+          }} 
+          animate={
+            shouldReduceMotion ? {} : { backgroundPosition: ["0px 0px", "24px 24px"] }
+          }
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
         {/* ─────────── Giant CTA Banner ─────────── */}
         <section
           ref={ctaRef}
