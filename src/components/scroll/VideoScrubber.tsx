@@ -262,29 +262,33 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
           />
 
           {/* Intro Text overlay */}
-          <div
-            ref={introTextRef}
-            className="absolute z-40 bottom-8 left-6 md:bottom-auto md:top-10 md:left-10 text-white font-black uppercase tracking-tighter leading-[0.85] pointer-events-none mix-blend-difference"
-          >
-            <div className="flex flex-col text-left">
-              <div className="text-xl md:text-3xl text-[#FACC15] h-[0.85em] overflow-hidden relative mb-1">
-                <div
-                  className="flex flex-col transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateY(${altWord === "Office" ? "0%" : "-50%"})` }}
-                >
-                  <span className="h-[0.85em] block leading-[0.85]">Office</span>
-                  <span className="h-[0.85em] block leading-[0.85]">Warehouse</span>
+          {loaded && (
+            <div className="absolute inset-y-0 left-6 md:left-10 flex flex-col justify-center pointer-events-none z-40 mix-blend-difference">
+              <div
+                ref={introTextRef}
+                className="text-white font-black uppercase tracking-tighter leading-[0.85]"
+              >
+                <div className="flex flex-col text-left">
+                  <div className="text-xl md:text-3xl text-[#FACC15] h-[0.85em] overflow-hidden relative mb-1">
+                    <div
+                      className="flex flex-col transition-transform duration-500 ease-in-out"
+                      style={{ transform: `translateY(${altWord === "Office" ? "0%" : "-50%"})` }}
+                    >
+                      <span className="h-[0.85em] block leading-[0.85]">Office</span>
+                      <span className="h-[0.85em] block leading-[0.85]">Warehouse</span>
+                    </div>
+                  </div>
+                  <div className="text-4xl md:text-6xl">Demolition.</div>
+                  <div className="text-4xl md:text-6xl">Dismantling.</div>
+                  <div className="text-4xl md:text-6xl">Done.</div>
                 </div>
               </div>
-              <div className="text-4xl md:text-6xl">Demolition</div>
-              <div className="text-4xl md:text-6xl">Dismantling</div>
-              <div className="text-4xl md:text-6xl">Done.</div>
             </div>
-          </div>
+          )}
 
           {/* Cascading Texts overlay */}
           <div
-            className={`absolute inset-0 z-20 flex flex-col justify-end items-center pb-24 md:pb-32 pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
+            className={`absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
           >
             <h2 ref={text1Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
               Call Us
