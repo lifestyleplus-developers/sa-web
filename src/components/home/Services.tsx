@@ -135,7 +135,7 @@ export default function Services({
       const pin = ScrollTrigger.create({
         trigger: section,
         start: "bottom bottom",
-        end: () => `+=${window.innerHeight}`,
+        end: () => `+=${window.innerHeight * 2}`,
         pin: section,
         pinSpacing: false,
         anticipatePin: 1,

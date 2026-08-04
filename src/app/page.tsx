@@ -11,6 +11,7 @@ export default function Home() {
 
       <HomeHero>
         <DeferredServices />
+        <div className="h-svh bg-black md:hidden" aria-hidden="true" />
       </HomeHero>
 
       <DeferredHighlightedProjects />

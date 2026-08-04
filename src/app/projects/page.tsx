@@ -69,11 +69,14 @@ export default function ProjectsPage() {
         </section>
 
       {/* Projects Grid */}
-      <section className="w-full px-6 md:px-12 max-w-[1400px] mb-32 md:mb-48">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+      <section className="mb-32 w-full max-w-7xl px-8 sm:px-10 md:mb-48 md:px-16">
+        <div className="grid grid-cols-1 justify-items-center gap-8 md:grid-cols-2 md:gap-10 xl:grid-cols-3">
           {allProjects.map((project, idx) => (
             <div key={idx} className="flex justify-center w-full">
-              <ProjectCard {...project} className="w-full h-[450px] md:h-[550px]" />
+              <ProjectCard
+                {...project}
+                className="h-[420px] w-full max-w-[340px] md:h-[500px] md:max-w-[380px]"
+              />
             </div>
           ))}
         </div>
