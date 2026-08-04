@@ -463,14 +463,13 @@ export default function Footer() {
               </h4>
               <div className="flex flex-col items-center gap-4">
                 {services.slice(0, 6).map((s) => (
-                  <Link
+                  <span
                     key={s.label}
-                    href={s.href}
-                    className="group relative text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-pointer w-fit"
+                    className="group relative text-white/60 text-sm font-medium transition-colors duration-200 hover:text-white cursor-default w-fit"
                   >
                     {s.label}
                     <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[#FACC15] transition-all duration-300 group-hover:w-full" />
-                  </Link>
+                  </span>
                 ))}
               </div>
             </RevealGroup>
