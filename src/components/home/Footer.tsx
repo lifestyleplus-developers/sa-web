@@ -9,8 +9,8 @@ import {
   useInView,
   useSpring,
   useMotionValue,
-  useMotionTemplate,
 } from "motion/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   Phone,
@@ -19,7 +19,10 @@ import {
   ArrowUpRight,
   ChevronUp,
 } from "lucide-react";
-import DotGrid from "@/components/ReactBits/DotGrid";
+
+const DotGrid = dynamic(() => import("@/components/ReactBits/DotGrid"), {
+  ssr: false,
+});
 
 /* ───────────────────────── DATA ───────────────────────── */
 
@@ -253,6 +256,7 @@ export default function Footer() {
   const containerRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const footerInView = useInView(containerRef);
 
   const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
 
@@ -266,8 +270,6 @@ export default function Footer() {
     [0, 1],
     shouldReduceMotion ? ["0%", "0%"] : ["10%", "-10%"]
   );
-
-  const year = new Date().getFullYear();
 
   /* Spotlight Mouse Tracking for Dot Grid */
   const mouseX = useMotionValue(0);
@@ -288,19 +290,21 @@ export default function Footer() {
         className="relative z-30 bg-black text-white overflow-hidden w-full -mt-[1px]"
       >
         {/* Animated Subtle Dot Grid Background */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <DotGrid
-            dotSize={2}
-            gap={24}
-            baseColor="#444444"
-            activeColor="#FACC15"
-            proximity={120}
-            shockRadius={250}
-            shockStrength={5}
-            resistance={750}
-            returnDuration={1.5}
-          />
-        </div>
+        {footerInView ? (
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <DotGrid
+              dotSize={2}
+              gap={24}
+              baseColor="#444444"
+              activeColor="#FACC15"
+              proximity={120}
+              shockRadius={250}
+              shockStrength={5}
+              resistance={750}
+              returnDuration={1.5}
+            />
+          </div>
+        ) : null}
         
         {/* ─────────── Giant CTA Banner ─────────── */}
         <section
