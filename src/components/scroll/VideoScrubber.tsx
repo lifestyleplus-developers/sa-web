@@ -36,6 +36,14 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
   const [altWord, setAltWord] = useState("Office");
   const shouldReduceMotion = useReducedMotion();
 
+  // Check if frames were already loaded in this session
+  useEffect(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("framesLoaded") === "true") {
+      setLoaded(true);
+      setLoadProgress(100);
+    }
+  }, []);
+
   // Alternate the text
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,6 +68,9 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
         loadNextFrame();
       } else if (completedCount === framesToLoad && !cancelled) {
         setLoaded(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("framesLoaded", "true");
+        }
       }
     };
 
@@ -96,9 +107,9 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
   function drawFrame(index: number) {
     const canvas = canvasRef.current;
     const img = imagesRef.current[index];
-    if (!canvas || !img || !img.naturalWidth || !img.naturalHeight) return;
+    if (!canvas || !img || !img.naturalWidth || !img.naturalHeight) return false;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Cover-fit the image on the canvas
     const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
@@ -107,6 +118,7 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
     const x = (canvas.width - img.naturalWidth * scale) / 2;
     const y = (canvas.height - img.naturalHeight * scale) / 2;
     ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
+    return true;
   }
 
   // Smooth easing RAF loop with 60 FPS throttle
@@ -136,8 +148,9 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
       const frameToDraw = Math.round(currentFrameRef.current);
       
       if (frameToDraw !== lastDrawnFrameRef.current) {
-        drawFrame(frameToDraw);
-        lastDrawnFrameRef.current = frameToDraw;
+        if (drawFrame(frameToDraw)) {
+          lastDrawnFrameRef.current = frameToDraw;
+        }
       }
     }
 
