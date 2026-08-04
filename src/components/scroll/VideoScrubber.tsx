@@ -263,12 +263,12 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
 
           {/* Intro Text overlay */}
           {loaded && (
-            <div className="absolute inset-y-0 left-6 md:left-10 flex flex-col justify-center pointer-events-none z-40 mix-blend-difference">
+            <div className="absolute inset-y-0 left-4 md:left-8 flex flex-col justify-center pointer-events-none z-40 mix-blend-difference">
               <div
                 ref={introTextRef}
                 className="text-white font-black uppercase tracking-tighter leading-[0.85]"
               >
-                <div className="flex flex-col text-left">
+                <div className="flex flex-col items-start text-left">
                   <div className="text-xl md:text-3xl text-[#FACC15] h-[0.85em] overflow-hidden relative mb-1">
                     <div
                       className="flex flex-col transition-transform duration-500 ease-in-out"
@@ -285,10 +285,10 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
               </div>
             </div>
           )}
-
+ 
           {/* Cascading Texts overlay */}
           <div
-            className={`absolute inset-0 z-20 flex flex-col justify-center items-center pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
+            className={`absolute inset-y-0 left-0 md:left-0 right-4 md:right-8 z-20 flex flex-col justify-center items-start pointer-events-none overflow-hidden ${shouldReduceMotion ? "hidden" : ""}`}
           >
             <h2 ref={text1Ref} className="text-white text-5xl md:text-8xl font-black uppercase tracking-tighter leading-none will-change-transform">
               Call Us
