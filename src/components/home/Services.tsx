@@ -1,8 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { TiltCard } from "@/components/unlumen-ui/primitives/tilt-card";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type ServicesTransitionVariant = "first" | "second" | "third" | "kora";
 
@@ -118,6 +122,31 @@ export default function Services({
     [0, 0.08, 0.82, 1],
     shouldReduceMotion ? [0, 0, 0, 0] : [0, 1, 1, 0]
   );
+
+  useEffect(() => {
+    if (transitionVariant !== "kora") return;
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const media = gsap.matchMedia();
+
+    media.add("(max-width: 767px)", () => {
+      const pin = ScrollTrigger.create({
+        trigger: section,
+        start: "bottom bottom",
+        end: () => `+=${window.innerHeight}`,
+        pin: section,
+        pinSpacing: false,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      });
+
+      return () => pin.kill();
+    });
+
+    return () => media.revert();
+  }, [transitionVariant]);
 
   return (
     <motion.section

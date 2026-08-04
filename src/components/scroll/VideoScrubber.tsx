@@ -226,19 +226,23 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
     tl.fromTo(text2Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.75);
     tl.fromTo(text3Ref.current, { y: "-150vh" }, { y: 0, duration: 0.05, ease: "power2.out" }, 0.8);
 
-    // Kora: both the final frame and completed text stack remain fixed while
-    // the Services section travels over them during the final viewport.
+    // Handle dynamic heights from Next.js dynamic imports (DeferredServices)
+    const resizeObserver = new ResizeObserver(() => {
+      ScrollTrigger.refresh();
+    });
+    resizeObserver.observe(section);
 
     return () => {
       window.clearTimeout(refreshTimeout);
+      resizeObserver.disconnect();
       tl.scrollTrigger?.kill();
       tl.kill();
     };
   }, [loaded, shouldReduceMotion]);
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-white">
-        <div
+    <section ref={sectionRef} className="relative z-0 w-full bg-white">
+      <div
           ref={heroViewportRef}
           className="sticky top-0 z-0 flex h-screen w-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: "white" }}
@@ -322,7 +326,11 @@ export default function VideoScrubber({ children }: { children?: ReactNode }) {
           aria-hidden="true"
         />
 
-        {children ? <div className="relative z-20 bg-black">{children}</div> : null}
+        {children ? (
+          <div className="relative z-20 min-h-screen bg-black">
+            {children}
+          </div>
+        ) : null}
     </section>
   );
 }

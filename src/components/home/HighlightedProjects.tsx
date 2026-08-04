@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
-import Image from "next/image";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 
 const projects = [
@@ -56,7 +55,7 @@ export default function HighlightedProjects() {
   const trackX = useTransform(scrollYProgress, [0.45, 1.0], shouldReduceMotion ? ["0%", "0%"] : ["0%", "-85%"]);
 
   return (
-    <section ref={containerRef} className="relative z-30 w-full bg-black md:h-[800vh]">
+    <section id="highlighted-projects" ref={containerRef} className="relative z-30 -mt-px w-full bg-black rounded-t-[2rem] shadow-[0_-20px_40px_rgba(0,0,0,0.5)] md:h-[800vh] md:rounded-none md:shadow-none">
       {/* Mobile uses regular document flow. This avoids Safari dropping the composited
           sticky layer to black while the second card enters the viewport. */}
       <div className="px-5 pb-20 pt-20 md:hidden">
@@ -189,5 +188,3 @@ export default function HighlightedProjects() {
     </section>
   );
 }
-
-
